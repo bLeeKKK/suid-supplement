@@ -3,7 +3,7 @@ import { Button, Icon, Spin, Upload } from 'antd';
 import type { UploadProps } from 'antd/lib/upload';
 import type { FC, ReactNode } from 'react';
 import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
-import styles from './index.module.less';
+import './styles.css';
 
 type uploadType = 'file' | 'btn' | undefined;
 
@@ -106,10 +106,8 @@ const SsUpload: FC<IUploadProps> = forwardRef(
     const areaRef = useRef<HTMLDivElement | null>(null);
     const uploadRef = useRef<Upload>(null);
     useImperativeHandle(ref, () => uploadRef.current);
-    const ajaxUploaderVDom = useMemo(
-      () => uploadRef?.current?.upload?.uploader,
-      [uploadRef.current],
-    );
+    const ajaxUploaderVDom = uploadRef?.current?.upload?.uploader;
+
     const isHovering = useHover(areaRef);
     const showUploadArea = useMemo(() => {
       let dom: ReactNode = null;
@@ -173,7 +171,7 @@ const SsUpload: FC<IUploadProps> = forwardRef(
     if (pastePower || dragPower) {
       // 粘贴文件上传
       return (
-        <div ref={areaRef} className={styles['paster-box']} style={areaStyle}>
+        <div ref={areaRef} className="suid-s-paster-box" style={areaStyle}>
           {renderShow}
         </div>
       );
