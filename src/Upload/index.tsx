@@ -154,6 +154,7 @@ const SsUpload: FC<IUploadProps> = forwardRef(
     const options: UploadProps = {
       multiple: true,
       listType: defaultListType,
+      disabled,
       ...props,
     };
 
@@ -168,7 +169,7 @@ const SsUpload: FC<IUploadProps> = forwardRef(
       </>
     );
 
-    if (pastePower || dragPower) {
+    if (!disabled && (pastePower || dragPower)) {
       // 粘贴文件上传
       return (
         <div ref={areaRef} className="suid-s-paster-box" style={areaStyle}>

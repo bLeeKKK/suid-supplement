@@ -13,6 +13,7 @@ demo:
 <code src="./UploadExample1.tsx" title="默认组件"></code>
 <code src="./UploadExample2.tsx" title="自定义上传触发按钮"></code>
 <code src="./UploadExample3.tsx" title="关闭拖拽粘贴功能"></code>
+<code src="./UploadExample4.tsx" title="禁用上传功能"></code>
 
 支持[antd3:Upload](https://3x.ant.design/components/upload-cn)组件
 
