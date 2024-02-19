@@ -1,7 +1,7 @@
 import { useControllableValue } from 'ahooks';
 import { InputNumber } from 'antd';
 import React, { forwardRef, useMemo } from 'react';
-import OverflowShowbox from '../../../OverflowShowbox';
+import OverflowShowbox from '../../OverflowShowbox';
 
 const SInputNumber = forwardRef(
   (

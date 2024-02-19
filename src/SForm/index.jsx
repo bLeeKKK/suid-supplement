@@ -2,13 +2,10 @@ import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
 import {
   Button,
   Checkbox,
-  Col,
   DatePicker,
   Form,
   Icon,
-  Input,
   Radio,
-  Row,
   Switch,
   TimePicker,
   Tooltip,
@@ -20,43 +17,20 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import SInput from './Field/SInput';
-import SInputNumber from './Field/SInputNumber';
-import SSearchPro from './Field/SSearchPro';
-import Sselect from './Field/SSelect';
-import STags from './Field/STags';
+import SInput from '../Field/SInput';
+import SInputNumber from '../Field/SInputNumber';
+import SSearchPro from '../Field/SSearchPro';
+import SSelect from '../Field/SSelect';
+import STags from '../Field/STags';
+import STextArea from '../Field/STextArea';
+import SRow from '../SRow';
 import styles from './styles.module.less';
 // import Address from '../Address';
 // import EditFile from '../EditFile';
 // import AntdUpload from '../AntdUpload';
 
 const { RangePicker, MonthPicker } = DatePicker;
-const { TextArea } = Input;
 const CheckboxGroup = Checkbox.Group;
-export const Combos = {
-  // antd
-  timePicker: TimePicker, // 时间选择time格式
-  datePicker: DatePicker, // 时间选择
-  rangePicker: RangePicker, // 时间段选择
-  monthPicker: MonthPicker, // 月份时间选择
-  textarea: TextArea, // 文字输入区域
-  checkboxGroup: CheckboxGroup, // 多选
-  checkbox: Checkbox, // 复选框
-  radioGroup: Radio.Group, // 单选
-  radio: Radio, // 单选框
-  switch: Switch, // 单选框
-
-  // 自定义
-  input: SInput, // 文字输入
-  select: Sselect, // 下拉选择
-  tags: STags, // 自定义新增标签
-  number: SInputNumber, // 数字输入
-  search: SSearchPro, // 文字输入区域（快速搜索）
-
-  // upload: EditFile, // 上传
-  // antdUpload: AntdUpload, //  使用antd上传
-  // address: Address, // 地址选择
-};
 
 const LabelBox = ({ title, tip }) => {
   return (
@@ -71,12 +45,14 @@ const LabelBox = ({ title, tip }) => {
     </span>
   );
 };
+const SCol = SRow.SCol;
 
+// Context
 export const SFormContext = createContext();
 export const useGetForm = () => React.useContext(SFormContext);
 export const SRowContext = createContext();
-export const useRow = () => React.useContext(SRowContext);
 
+// hooks
 export const useWatch = (names, f) => {
   const formObj = useGetForm();
   const form = formObj?.form || f;
@@ -89,7 +65,8 @@ export const useWatch = (names, f) => {
   return watch;
 };
 
-const withFormItem = (Component, type) => {
+// 创建Form.Item包裹的表单项
+export const withFormItem = (Component, type) => {
   const App = (props) => {
     const { form, justShow, formFieldLayout, initialValues, itemPropsDefault } =
       useGetForm() || {
@@ -194,22 +171,21 @@ const withFormItem = (Component, type) => {
   return App;
 };
 
-const withColItem = (Component) => {
+// 创建Col包裹的项目
+export const withFormColItem = (Component) => {
   const App = ({ span, hide, colProps = {}, flexSpan, rules, ...props }) => {
-    const { basicSpan } = useRow() || {};
-    const style = hide ? { display: 'none' } : colProps.style;
-
-    // 自动计算占用比例表单项目layout比例
-    const itemSpan = span === undefined ? basicSpan : span;
-
     return (
-      <Col {...colProps} style={style} span={itemSpan}>
-        <Component
-          rules={hide ? [] : rules}
-          autoScale={flexSpan ? basicSpan / itemSpan : flexSpan} // 自动计算占用比例
-          {...props}
-        />
-      </Col>
+      <SCol {...colProps} hide={hide} span={span}>
+        {({ basicSpan, itemSpan }) => {
+          return (
+            <Component
+              rules={hide ? [] : rules}
+              autoScale={flexSpan ? basicSpan / itemSpan : flexSpan} // 自动计算占用比例
+              {...props}
+            />
+          );
+        }}
+      </SCol>
     );
   };
 
@@ -219,51 +195,51 @@ const withColItem = (Component) => {
 // antd 自带
 // 时间选择time格式
 export const FormTimePicker = withFormItem(TimePicker, 'timePicker');
-export const ColFormTimePicker = withColItem(FormTimePicker);
+export const ColFormTimePicker = withFormColItem(FormTimePicker);
 // 时间选择
 export const FormDatePicker = withFormItem(DatePicker, 'datePicker');
-export const ColFormDatePicker = withColItem(FormDatePicker);
+export const ColFormDatePicker = withFormColItem(FormDatePicker);
 // 时间段选择
 export const FormRangePicker = withFormItem(RangePicker, 'rangePicker');
-export const ColFormRangePicker = withColItem(FormRangePicker);
+export const ColFormRangePicker = withFormColItem(FormRangePicker);
 // 月份时间选择
 export const FormMonthPicker = withFormItem(MonthPicker, 'monthPicker');
-export const ColFormMonthPicker = withColItem(FormMonthPicker);
-// 文字输入区域
-export const FormTextArea = withFormItem(TextArea, 'textarea');
-export const ColFormTextArea = withColItem(FormTextArea);
+export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
 // 多选
 export const FormCheckboxGroup = withFormItem(CheckboxGroup, 'checkboxGroup');
-export const ColFormCheckboxGroup = withColItem(FormCheckboxGroup);
+export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
 // 复选框
 export const FormCheckbox = withFormItem(Checkbox, 'checkbox');
-export const ColFormCheckbox = withColItem(FormCheckbox);
+export const ColFormCheckbox = withFormColItem(FormCheckbox);
 // 单选
 export const FormRadioGroup = withFormItem(Radio.Group, 'radioGroup');
-export const ColFormRadioGroup = withColItem(FormRadioGroup);
+export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
 // 单选框
 export const FormRadio = withFormItem(Radio, 'radio');
-export const ColFormRadio = withColItem(FormRadio);
+export const ColFormRadio = withFormColItem(FormRadio);
 // 切换按钮
 export const FormSwitch = withFormItem(Switch, 'switch');
-export const ColFormSwitch = withColItem(FormSwitch);
+export const ColFormSwitch = withFormColItem(FormSwitch);
 
 // 自定义
 // 输入框
 export const FormInput = withFormItem(SInput, 'input');
-export const ColFormInput = withColItem(FormInput);
+export const ColFormInput = withFormColItem(FormInput);
 // 下拉选择
-export const FormSelect = withFormItem(Sselect, 'select');
-export const ColFormSelect = withColItem(FormSelect);
+export const FormSelect = withFormItem(SSelect, 'select');
+export const ColFormSelect = withFormColItem(FormSelect);
+// 下拉选择
+export const FormTextArea = withFormItem(STextArea, 'textArea');
+export const ColFormTextArea = withFormColItem(FormTextArea);
 // 自定义新增标签
 export const FormTags = withFormItem(STags, 'tags');
-export const ColFormTags = withColItem(FormTags);
+export const ColFormTags = withFormColItem(FormTags);
 // 数字输入
 export const FormInputNumber = withFormItem(SInputNumber, 'number');
-export const ColFormInputNumber = withColItem(FormInputNumber);
+export const ColFormInputNumber = withFormColItem(FormInputNumber);
 // 输入框（快速搜索）
 export const FormSearch = withFormItem(SSearchPro, 'search');
-export const ColFormSearch = withColItem(FormSearch);
+export const ColFormSearch = withFormColItem(FormSearch);
 
 const FormBox = forwardRef(
   (
@@ -345,14 +321,6 @@ const FormBox = forwardRef(
   },
 );
 
-const RowBox = ({ basicSpan, children, ...props }) => {
-  return (
-    <SRowContext.Provider value={{ basicSpan }}>
-      <Row {...(props || {})}>{children}</Row>
-    </SRowContext.Provider>
-  );
-};
-
 const FormCom = Form.create({
   onFieldsChange(props, changedFields) {
     if (props.onFieldsChange) props.onFieldsChange(changedFields, props);
@@ -366,7 +334,6 @@ const SFormBox = forwardRef(({ form, ...props }, ref) => {
   if (form) {
     return <FormBox form={form} ref={ref} {...props} />;
   }
-
   return (
     <FormCom
       wrappedComponentRef={(f) => {
@@ -400,10 +367,10 @@ const SForm = forwardRef(
 
     return (
       <SFormBox ref={saveFormRef} {...props}>
-        <RowBox basicSpan={basicSpan} {...rowProps}>
+        <SRow basicSpan={basicSpan} {...rowProps}>
           {children}
           {formButtons && (
-            <Col
+            <SCol
               span={24}
               style={{
                 textAlign: 'right',
@@ -433,15 +400,14 @@ const SForm = forwardRef(
                   </Button>
                 </>
               )}
-            </Col>
+            </SCol>
           )}
-        </RowBox>
+        </SRow>
       </SFormBox>
     );
   },
 );
 
-SForm.RowBox = RowBox;
 SForm.SFormBox = SFormBox;
 
 export default SForm;

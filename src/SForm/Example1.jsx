@@ -1,7 +1,12 @@
 import { Button, Switch } from 'antd';
 import React from 'react';
-// import { request } from 'umi';
-import SForm, { ColFormInput, ColFormSearch, ColFormSelect } from './index.jsx';
+import {
+  ColFormInput,
+  ColFormSearch,
+  ColFormSelect,
+  ColFormTextArea,
+  SForm,
+} from 'suid-supplement';
 
 const request = async () => {};
 const getDirctData = async (code, count, filters) => {
@@ -64,6 +69,19 @@ export default () => {
         // }}
         // form={form}
       >
+        <ColFormTextArea
+          label="描述"
+          span={24}
+          flexSpan
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: '请输入用户名',
+            },
+          ]}
+        />
+
         <ColFormInput
           label="用户名1"
           name="userName1"

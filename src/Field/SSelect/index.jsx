@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import OverflowShowbox from '../../../OverflowShowbox';
+import OverflowShowbox from '../../OverflowShowbox';
 import classStyle from './style.module.less';
 
 const { Option } = Select;
