@@ -1,6 +1,7 @@
 import { Button, Switch } from 'antd';
 import React from 'react';
 import {
+  ColFormCheckbox,
   ColFormDatePicker,
   ColFormInput,
   ColFormMonthPicker,
@@ -219,6 +220,9 @@ export default () => {
         <ColFormRangePicker label="时间段选择" name="dateRange" />
         <ColFormMonthPicker label="月份选择" name="dateMounth" />
         <ColFormWeekPicker label="周选择" name="dateWeek" />
+        <ColFormCheckbox label="复选框" name="checkbox">
+          是否
+        </ColFormCheckbox>
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>

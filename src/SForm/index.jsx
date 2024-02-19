@@ -7,6 +7,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
+import SCheckbox from '../Field/SCheckbox';
 import SDatePicker from '../Field/SDatePicker';
 import SInput from '../Field/SInput';
 import SInputNumber from '../Field/SInputNumber';
@@ -183,13 +184,9 @@ export const withFormColItem = (Component) => {
   return App;
 };
 
-// antd 自带
 // 多选
 export const FormCheckboxGroup = withFormItem(CheckboxGroup, 'checkboxGroup');
 export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
-// 复选框
-export const FormCheckbox = withFormItem(Checkbox, 'checkbox');
-export const ColFormCheckbox = withFormColItem(FormCheckbox);
 // 单选
 export const FormRadioGroup = withFormItem(Radio.Group, 'radioGroup');
 export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
@@ -200,7 +197,9 @@ export const ColFormRadio = withFormColItem(FormRadio);
 export const FormSwitch = withFormItem(Switch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
 
-// 自定义
+// 复选框
+export const FormCheckbox = withFormItem(SCheckbox, 'checkbox');
+export const ColFormCheckbox = withFormColItem(FormCheckbox);
 // 日期选择
 export const FormDatePicker = withFormItem(SDatePicker, 'datePicker');
 export const ColFormDatePicker = withFormColItem(FormDatePicker);
@@ -222,7 +221,6 @@ export const FormWeekPicker = withFormItem(
   'monthPicker',
 );
 export const ColFormWeekPicker = withFormColItem(FormWeekPicker);
-
 // 时间选择time格式
 export const FormTimePicker = withFormItem(STimePicker, 'timePicker');
 export const ColFormTimePicker = withFormColItem(FormTimePicker);
