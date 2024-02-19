@@ -204,10 +204,13 @@ export const ColFormSwitch = withFormColItem(FormSwitch);
 // 日期选择
 export const FormDatePicker = withFormItem(SDatePicker, 'datePicker');
 export const ColFormDatePicker = withFormColItem(FormDatePicker);
+// 时间段选择
+export const FormRangePicker = withFormItem(
+  SDatePicker.SRangePicker,
+  'rangePicker',
+);
+export const ColFormRangePicker = withFormColItem(FormRangePicker);
 
-// // 时间段选择
-// export const FormRangePicker = withFormItem(RangePicker, 'rangePicker');
-// export const ColFormRangePicker = withFormColItem(FormRangePicker);
 // // 月份时间选择
 // export const FormMonthPicker = withFormItem(MonthPicker, 'monthPicker');
 // export const ColFormMonthPicker = withFormColItem(FormMonthPicker);

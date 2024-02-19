@@ -5,6 +5,7 @@ export {
   ColFormDatePicker,
   ColFormInput,
   ColFormInputNumber,
+  ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
   ColFormTags,

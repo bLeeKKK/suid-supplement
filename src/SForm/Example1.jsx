@@ -3,6 +3,7 @@ import React from 'react';
 import {
   ColFormDatePicker,
   ColFormInput,
+  ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
   ColFormTextArea,
@@ -213,6 +214,7 @@ export default () => {
 
         <ColFormTimePicker label="时间选择" name="time" />
         <ColFormDatePicker label="日期选择" name="date" />
+        <ColFormRangePicker label="时间段选择" name="dateRange" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>
