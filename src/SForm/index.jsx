@@ -7,7 +7,6 @@ import {
   Icon,
   Radio,
   Switch,
-  TimePicker,
   Tooltip,
 } from 'antd';
 import classnames from 'classnames';
@@ -23,6 +22,7 @@ import SSearchPro from '../Field/SSearchPro';
 import SSelect from '../Field/SSelect';
 import STags from '../Field/STags';
 import STextArea from '../Field/STextArea';
+import STimePicker from '../Field/STimePicker';
 import SRow from '../SRow';
 import styles from './styles.module.less';
 // import Address from '../Address';
@@ -77,7 +77,7 @@ export const withFormItem = (Component, type) => {
       name,
       label,
       tip,
-      style,
+      styleItem,
       className,
       show,
       filedOptions = {},
@@ -141,7 +141,7 @@ export const withFormItem = (Component, type) => {
         style={{
           ...(hideMb8pxFlag ? { marginBottom: '0' } : {}),
           ...(autoScale ? { display: 'flex' } : {}),
-          ...(style || {}),
+          ...(styleItem || {}),
         }}
         // 自动计算占用比例
         {...(autoScale
@@ -193,9 +193,6 @@ export const withFormColItem = (Component) => {
 };
 
 // antd 自带
-// 时间选择time格式
-export const FormTimePicker = withFormItem(TimePicker, 'timePicker');
-export const ColFormTimePicker = withFormColItem(FormTimePicker);
 // 时间选择
 export const FormDatePicker = withFormItem(DatePicker, 'datePicker');
 export const ColFormDatePicker = withFormColItem(FormDatePicker);
@@ -222,6 +219,9 @@ export const FormSwitch = withFormItem(Switch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
 
 // 自定义
+// 时间选择time格式
+export const FormTimePicker = withFormItem(STimePicker, 'timePicker');
+export const ColFormTimePicker = withFormColItem(FormTimePicker);
 // 输入框
 export const FormInput = withFormItem(SInput, 'input');
 export const ColFormInput = withFormColItem(FormInput);

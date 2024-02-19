@@ -5,6 +5,7 @@ import {
   ColFormSearch,
   ColFormSelect,
   ColFormTextArea,
+  ColFormTimePicker,
   SForm,
 } from 'suid-supplement';
 
@@ -206,7 +207,10 @@ export default () => {
             defaultPageSize: 5,
             refreshDeps: [count],
           }}
+          renderCondition={(form) => form?.getFieldValue('userName') === '李四'}
         />
+
+        <ColFormTimePicker label="时间选择" name="time" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>

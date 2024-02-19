@@ -8,6 +8,7 @@ export {
   ColFormSelect,
   ColFormTags,
   ColFormTextArea,
+  ColFormTimePicker,
   FormTimePicker,
   default as SForm,
   withFormColItem,
