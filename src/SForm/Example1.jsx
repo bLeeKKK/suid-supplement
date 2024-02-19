@@ -1,6 +1,7 @@
 import { Button, Switch } from 'antd';
 import React from 'react';
 import {
+  ColFormDatePicker,
   ColFormInput,
   ColFormSearch,
   ColFormSelect,
@@ -211,6 +212,7 @@ export default () => {
         />
 
         <ColFormTimePicker label="时间选择" name="time" />
+        <ColFormDatePicker label="日期选择" name="date" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>

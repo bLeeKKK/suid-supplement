@@ -1,14 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import {
-  Button,
-  Checkbox,
-  DatePicker,
-  Form,
-  Icon,
-  Radio,
-  Switch,
-  Tooltip,
-} from 'antd';
+import { Button, Checkbox, Form, Icon, Radio, Switch, Tooltip } from 'antd';
 import classnames from 'classnames';
 import React, {
   createContext,
@@ -16,6 +7,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
+import SDatePicker from '../Field/SDatePicker';
 import SInput from '../Field/SInput';
 import SInputNumber from '../Field/SInputNumber';
 import SSearchPro from '../Field/SSearchPro';
@@ -29,7 +21,6 @@ import styles from './styles.module.less';
 // import EditFile from '../EditFile';
 // import AntdUpload from '../AntdUpload';
 
-const { RangePicker, MonthPicker } = DatePicker;
 const CheckboxGroup = Checkbox.Group;
 
 const LabelBox = ({ title, tip }) => {
@@ -193,15 +184,6 @@ export const withFormColItem = (Component) => {
 };
 
 // antd 自带
-// 时间选择
-export const FormDatePicker = withFormItem(DatePicker, 'datePicker');
-export const ColFormDatePicker = withFormColItem(FormDatePicker);
-// 时间段选择
-export const FormRangePicker = withFormItem(RangePicker, 'rangePicker');
-export const ColFormRangePicker = withFormColItem(FormRangePicker);
-// 月份时间选择
-export const FormMonthPicker = withFormItem(MonthPicker, 'monthPicker');
-export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
 // 多选
 export const FormCheckboxGroup = withFormItem(CheckboxGroup, 'checkboxGroup');
 export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
@@ -219,6 +201,17 @@ export const FormSwitch = withFormItem(Switch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
 
 // 自定义
+// 日期选择
+export const FormDatePicker = withFormItem(SDatePicker, 'datePicker');
+export const ColFormDatePicker = withFormColItem(FormDatePicker);
+
+// // 时间段选择
+// export const FormRangePicker = withFormItem(RangePicker, 'rangePicker');
+// export const ColFormRangePicker = withFormColItem(FormRangePicker);
+// // 月份时间选择
+// export const FormMonthPicker = withFormItem(MonthPicker, 'monthPicker');
+// export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
+
 // 时间选择time格式
 export const FormTimePicker = withFormItem(STimePicker, 'timePicker');
 export const ColFormTimePicker = withFormColItem(FormTimePicker);
