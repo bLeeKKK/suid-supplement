@@ -3,7 +3,7 @@ import { DatePicker } from 'antd';
 import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
-const { RangePicker, MonthPicker } = DatePicker;
+const { RangePicker, MonthPicker, WeekPicker } = DatePicker;
 
 const SDatePicker = forwardRef(
   (
@@ -45,6 +45,104 @@ const SDatePicker = forwardRef(
       showValue
     ) : (
       <DatePicker
+        {...props}
+        style={{ width: '100%', ...(style || {}) }}
+        format={format}
+        ref={inputrRef}
+      />
+    );
+  },
+);
+
+const SMonthPicker = forwardRef(
+  (
+    {
+      show = false,
+      format,
+      renderForShow,
+      overflowShowTip = true,
+      form,
+      style,
+      ...props
+    },
+    ref,
+  ) => {
+    const inputrRef = useRef();
+    useImperativeHandle(ref, () => ({ inputrRef }));
+
+    const [value] = useControllableValue(props);
+    const [showFlag, showValue] = useMemo(() => {
+      const flag = !!show;
+      let val = value?.format(format || 'YYYY-MM');
+
+      if (typeof renderForShow === 'function') {
+        val = renderForShow({ value, form, defaultShow: val });
+      }
+
+      if (overflowShowTip) {
+        val = (
+          <div style={{ height: '40px' }}>
+            <OverflowShowbox>{val}</OverflowShowbox>
+          </div>
+        );
+      }
+
+      return [flag, val];
+    }, [show, value, form, renderForShow, overflowShowTip, format]);
+
+    return showFlag ? (
+      showValue
+    ) : (
+      <MonthPicker
+        {...props}
+        style={{ width: '100%', ...(style || {}) }}
+        format={format}
+        ref={inputrRef}
+      />
+    );
+  },
+);
+
+const SWeekPicker = forwardRef(
+  (
+    {
+      show = false,
+      format,
+      renderForShow,
+      overflowShowTip = true,
+      form,
+      style,
+      ...props
+    },
+    ref,
+  ) => {
+    const inputrRef = useRef();
+    useImperativeHandle(ref, () => ({ inputrRef }));
+
+    const [value] = useControllableValue(props);
+    const [showFlag, showValue] = useMemo(() => {
+      const flag = !!show;
+      let val = value?.format(format || 'YYYY-wo');
+
+      if (typeof renderForShow === 'function') {
+        val = renderForShow({ value, form, defaultShow: val });
+      }
+
+      if (overflowShowTip) {
+        val = (
+          <div style={{ height: '40px' }}>
+            <OverflowShowbox>{val}</OverflowShowbox>
+          </div>
+        );
+      }
+
+      return [flag, val];
+    }, [show, value, form, renderForShow, overflowShowTip, format]);
+
+    return showFlag ? (
+      showValue
+    ) : (
+      <WeekPicker
         {...props}
         style={{ width: '100%', ...(style || {}) }}
         format={format}
@@ -115,5 +213,7 @@ const SRangePicker = forwardRef(
 );
 
 SDatePicker.SRangePicker = SRangePicker;
+SDatePicker.SMonthPicker = SMonthPicker;
+SDatePicker.SWeekPicker = SWeekPicker;
 
 export default SDatePicker;

@@ -210,10 +210,18 @@ export const FormRangePicker = withFormItem(
   'rangePicker',
 );
 export const ColFormRangePicker = withFormColItem(FormRangePicker);
-
-// // 月份时间选择
-// export const FormMonthPicker = withFormItem(MonthPicker, 'monthPicker');
-// export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
+// 月份时间选择
+export const FormMonthPicker = withFormItem(
+  SDatePicker.SMonthPicker,
+  'monthPicker',
+);
+export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
+// 周时间选择
+export const FormWeekPicker = withFormItem(
+  SDatePicker.SWeekPicker,
+  'monthPicker',
+);
+export const ColFormWeekPicker = withFormColItem(FormWeekPicker);
 
 // 时间选择time格式
 export const FormTimePicker = withFormItem(STimePicker, 'timePicker');

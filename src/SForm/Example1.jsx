@@ -3,11 +3,13 @@ import React from 'react';
 import {
   ColFormDatePicker,
   ColFormInput,
+  ColFormMonthPicker,
   ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
   ColFormTextArea,
   ColFormTimePicker,
+  ColFormWeekPicker,
   SForm,
 } from 'suid-supplement';
 
@@ -215,6 +217,8 @@ export default () => {
         <ColFormTimePicker label="时间选择" name="time" />
         <ColFormDatePicker label="日期选择" name="date" />
         <ColFormRangePicker label="时间段选择" name="dateRange" />
+        <ColFormMonthPicker label="月份选择" name="dateMounth" />
+        <ColFormWeekPicker label="周选择" name="dateWeek" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>
