@@ -1,5 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Button, Form, Icon, Switch, Tooltip } from 'antd';
+import { Button, Form, Icon, Tooltip } from 'antd';
 import classnames from 'classnames';
 import React, {
   createContext,
@@ -14,6 +14,7 @@ import SInputNumber from '../Field/SInputNumber';
 import SRadio from '../Field/SRadio';
 import SSearchPro from '../Field/SSearchPro';
 import SSelect from '../Field/SSelect';
+import SSwitch from '../Field/SSwitch';
 import STags from '../Field/STags';
 import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
@@ -184,9 +185,8 @@ export const withFormColItem = (Component) => {
 };
 
 // 切换按钮
-export const FormSwitch = withFormItem(Switch, 'switch');
+export const FormSwitch = withFormItem(SSwitch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
-
 // 单选框
 export const FormRadio = withFormItem(SRadio, 'radio');
 export const ColFormRadio = withFormColItem(FormRadio);

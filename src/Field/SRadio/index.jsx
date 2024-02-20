@@ -16,7 +16,9 @@ const SRadio = forwardRef(
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
-      let val = <Radio {...props} checked={value} disabled ref={inputrRef} />;
+      let val = (
+        <Radio {...props} checked={value} onChange={() => {}} ref={inputrRef} />
+      );
 
       if (typeof renderForShow === 'function') {
         val = renderForShow({ value, form, defaultShow: val });
@@ -100,7 +102,7 @@ const SRadioGroup = forwardRef(
           {...props}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
-          disabled
+          onChange={() => {}}
           ref={inputrRef}
         >
           {optionChildren}

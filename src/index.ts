@@ -13,6 +13,7 @@ export {
   ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
+  ColFormSwitch,
   ColFormTags,
   ColFormTextArea,
   ColFormTimePicker,

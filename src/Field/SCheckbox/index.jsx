@@ -17,7 +17,12 @@ const SCheckbox = forwardRef(
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
       let val = (
-        <Checkbox {...props} checked={value} disabled ref={inputrRef} />
+        <Checkbox
+          {...props}
+          checked={value}
+          onChange={() => {}}
+          ref={inputrRef}
+        />
       );
 
       if (typeof renderForShow === 'function') {
@@ -104,7 +109,7 @@ const SCheckboxGroup = forwardRef(
           {...props}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
-          disabled
+          onChange={() => {}}
           ref={inputrRef}
         >
           {optionChildren}

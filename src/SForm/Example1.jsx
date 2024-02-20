@@ -11,6 +11,7 @@ import {
   ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
+  ColFormSwitch,
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
@@ -260,6 +261,7 @@ export default () => {
           name="radioGroup4"
           store={() => getDirctData('ocmcUserType')}
         />
+        <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>
