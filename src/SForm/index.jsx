@@ -1,5 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Button, Form, Icon, Radio, Switch, Tooltip } from 'antd';
+import { Button, Form, Icon, Switch, Tooltip } from 'antd';
 import classnames from 'classnames';
 import React, {
   createContext,
@@ -11,6 +11,7 @@ import SCheckbox from '../Field/SCheckbox';
 import SDatePicker from '../Field/SDatePicker';
 import SInput from '../Field/SInput';
 import SInputNumber from '../Field/SInputNumber';
+import SRadio from '../Field/SRadio';
 import SSearchPro from '../Field/SSearchPro';
 import SSelect from '../Field/SSelect';
 import STags from '../Field/STags';
@@ -182,16 +183,16 @@ export const withFormColItem = (Component) => {
   return App;
 };
 
-// 单选
-export const FormRadioGroup = withFormItem(Radio.Group, 'radioGroup');
-export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
-// 单选框
-export const FormRadio = withFormItem(Radio, 'radio');
-export const ColFormRadio = withFormColItem(FormRadio);
 // 切换按钮
 export const FormSwitch = withFormItem(Switch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
 
+// 单选框
+export const FormRadio = withFormItem(SRadio, 'radio');
+export const ColFormRadio = withFormColItem(FormRadio);
+// 单选
+export const FormRadioGroup = withFormItem(SRadio.SRadioGroup, 'radioGroup');
+export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
 // 多选
 export const FormCheckboxGroup = withFormItem(
   SCheckbox.SCheckboxGroup,

@@ -7,6 +7,7 @@ import {
   ColFormDatePicker,
   ColFormInput,
   ColFormMonthPicker,
+  ColFormRadioGroup,
   ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
@@ -217,7 +218,26 @@ export default () => {
           <Checkbox value="yyy">yyy</Checkbox>
         </ColFormCheckboxGroup>
         <ColFormCheckboxGroup
-          label="复选框(子项)"
+          label="复选框(配置)"
+          name="checkboxGroup2"
+          options={['Apple', 'Pear', 'Orange']}
+        />
+        <ColFormCheckboxGroup
+          label="复选框(配置)"
+          name="checkboxGroup3"
+          options={[
+            { label: 'Apple', value: 'apple' },
+            { label: 'Pear', value: 'pear' },
+            { label: 'Orange', value: 'orange' },
+          ]}
+        />
+        <ColFormCheckboxGroup
+          label="复选框(配置-请求)"
+          name="checkboxGroup4"
+          store={() => getDirctData('ocmcUserType')}
+        />
+        <ColFormCheckboxGroup
+          label="复选框(子项-请求)"
           name="checkboxGroup5"
           store={() => getDirctData('ocmcUserType')}
         >
@@ -235,23 +255,9 @@ export default () => {
             );
           }}
         </ColFormCheckboxGroup>
-        <ColFormCheckboxGroup
-          label="复选框(配置)"
-          name="checkboxGroup2"
-          options={['Apple', 'Pear', 'Orange']}
-        />
-        <ColFormCheckboxGroup
-          label="复选框(配置)"
-          name="checkboxGroup3"
-          options={[
-            { label: 'Apple', value: 'apple' },
-            { label: 'Pear', value: 'pear' },
-            { label: 'Orange', value: 'orange' },
-          ]}
-        />
-        <ColFormCheckboxGroup
+        <ColFormRadioGroup
           label="复选框(配置-请求)"
-          name="checkboxGroup4"
+          name="radioGroup4"
           store={() => getDirctData('ocmcUserType')}
         />
       </SForm>

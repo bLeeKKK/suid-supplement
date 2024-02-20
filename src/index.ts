@@ -8,6 +8,8 @@ export {
   ColFormInput,
   ColFormInputNumber,
   ColFormMonthPicker,
+  ColFormRadio,
+  ColFormRadioGroup,
   ColFormRangePicker,
   ColFormSearch,
   ColFormSelect,
