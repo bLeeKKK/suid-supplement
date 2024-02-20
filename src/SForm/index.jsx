@@ -1,5 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Button, Checkbox, Form, Icon, Radio, Switch, Tooltip } from 'antd';
+import { Button, Form, Icon, Radio, Switch, Tooltip } from 'antd';
 import classnames from 'classnames';
 import React, {
   createContext,
@@ -21,8 +21,6 @@ import styles from './styles.module.less';
 // import Address from '../Address';
 // import EditFile from '../EditFile';
 // import AntdUpload from '../AntdUpload';
-
-const CheckboxGroup = Checkbox.Group;
 
 const LabelBox = ({ title, tip }) => {
   return (
@@ -184,9 +182,6 @@ export const withFormColItem = (Component) => {
   return App;
 };
 
-// 多选
-export const FormCheckboxGroup = withFormItem(CheckboxGroup, 'checkboxGroup');
-export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
 // 单选
 export const FormRadioGroup = withFormItem(Radio.Group, 'radioGroup');
 export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
@@ -197,6 +192,12 @@ export const ColFormRadio = withFormColItem(FormRadio);
 export const FormSwitch = withFormItem(Switch, 'switch');
 export const ColFormSwitch = withFormColItem(FormSwitch);
 
+// 多选
+export const FormCheckboxGroup = withFormItem(
+  SCheckbox.SCheckboxGroup,
+  'checkboxGroup',
+);
+export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
 // 复选框
 export const FormCheckbox = withFormItem(SCheckbox, 'checkbox');
 export const ColFormCheckbox = withFormColItem(FormCheckbox);

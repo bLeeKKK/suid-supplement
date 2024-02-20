@@ -38,7 +38,7 @@ export const SSelect = forwardRef(
       overflowShowTip = true,
       options,
       store,
-      storeOption,
+      storeOption = {},
       searchForStore,
       reader = {
         label: 'label',
@@ -62,7 +62,7 @@ export const SSelect = forwardRef(
       pagination,
       tableProps,
     } = useAntdTable(store, {
-      ready: !!store && !Array.isArray(options),
+      ready: !!store,
       ...storeOption,
     });
 
@@ -74,7 +74,8 @@ export const SSelect = forwardRef(
     const errorMessage = error && error.message;
     const arrOptions = useMemo(() => {
       const newData = Array.isArray(data) ? data : data?.list || [];
-      const arr = typeof options === 'function' ? options(newData) : options;
+      const arr =
+        typeof options === 'function' ? options(newData) : options || [];
 
       return (arr || newData).map((res, i) => {
         return {
@@ -224,7 +225,7 @@ export const SSelect = forwardRef(
               <Tooltip
                 title={
                   <>
-                    获取选项失败：{errorMessage}
+                    Error: {errorMessage}
                     <span style={{ marginLeft: 4, fontSize: 12 }}>
                       {loading ? (
                         <Icon

@@ -13,4 +13,5 @@ export default defineConfig({
   },
   plugins: ['@umijs/plugins/dist/tailwindcss'],
   tailwindcss: {}, // 在umi中，表示启用该插件
+  mock: {},
 });

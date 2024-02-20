@@ -1,7 +1,9 @@
-import { Button, Switch } from 'antd';
+import { Button, Checkbox, Switch } from 'antd';
+import axios from 'axios';
 import React from 'react';
 import {
   ColFormCheckbox,
+  ColFormCheckboxGroup,
   ColFormDatePicker,
   ColFormInput,
   ColFormMonthPicker,
@@ -14,20 +16,19 @@ import {
   SForm,
 } from 'suid-supplement';
 
-const request = async () => {};
 const getDirctData = async (code, count, filters) => {
-  const { data } = await request(
-    `/api-gateway/dms/dataDict/getCanUseDataDictValues`,
-    {
-      params: {
-        dictCode: code,
-        count,
-        filters,
-      },
+  const { data } = await axios.get(`/api/dict`, {
+    params: {
+      dictCode: code,
+      count,
+      filters,
     },
-  );
+  });
 
-  return data;
+  return data.data.map((item) => ({
+    value: item.dataValue,
+    label: item.dataName,
+  }));
 };
 
 const getUserData = async ({ current, pageSize, filters }, count) => {
@@ -68,10 +69,7 @@ export default () => {
         onFinish={console.log}
         ref={formRef}
         // initialValues={{
-        //   userName: '张三',
-        //   phone: '12345678901',
-        //   phoneHide: '12345678901',
-        //   address: '北京市',
+        //   checkbox: true,
         // }}
         // form={form}
       >
@@ -97,7 +95,7 @@ export default () => {
               message: '请输入用户名',
             },
           ]}
-          initialValue="李1"
+          initialValue="李四"
         />
 
         <ColFormSearch
@@ -163,10 +161,6 @@ export default () => {
           label="用户类型"
           name="typeCode1"
           store={() => getDirctData('ocmcUserType')}
-          reader={{
-            label: 'dataName',
-            value: 'dataValue',
-          }}
         />
 
         <ColFormSelect
@@ -174,15 +168,11 @@ export default () => {
           name="typeCode2"
           // mode="multiple"
           store={({ filters }) => getDirctData('ocmcUserType', count, filters)}
-          reader={{
-            label: 'dataName',
-            value: 'dataValue',
-          }}
-          initialValue={['personal_zh-CN']}
-          noWrap
           storeOption={{
             refreshDeps: [count],
           }}
+          initialValue={['personal_zh-CN']}
+          noWrap
           searchForStore
           // show
           // hideMb8px
@@ -220,9 +210,50 @@ export default () => {
         <ColFormRangePicker label="时间段选择" name="dateRange" />
         <ColFormMonthPicker label="月份选择" name="dateMounth" />
         <ColFormWeekPicker label="周选择" name="dateWeek" />
-        <ColFormCheckbox label="复选框" name="checkbox">
-          是否
-        </ColFormCheckbox>
+
+        <ColFormCheckbox label="复选框" name="checkbox" />
+        <ColFormCheckboxGroup label="复选框(子项)" name="checkboxGroup">
+          <Checkbox value="xxx">xxx</Checkbox>
+          <Checkbox value="yyy">yyy</Checkbox>
+        </ColFormCheckboxGroup>
+        <ColFormCheckboxGroup
+          label="复选框(子项)"
+          name="checkboxGroup5"
+          store={() => getDirctData('ocmcUserType')}
+        >
+          {(arrOptions, Checkbox) => {
+            return (
+              <>
+                {arrOptions.map((item) => (
+                  <Checkbox key={item.value} value={item.value}>
+                    {item.label}
+                  </Checkbox>
+                ))}
+                <Checkbox value="xxx">xxx</Checkbox>
+                <Checkbox value="yyy">yyy</Checkbox>
+              </>
+            );
+          }}
+        </ColFormCheckboxGroup>
+        <ColFormCheckboxGroup
+          label="复选框(配置)"
+          name="checkboxGroup2"
+          options={['Apple', 'Pear', 'Orange']}
+        />
+        <ColFormCheckboxGroup
+          label="复选框(配置)"
+          name="checkboxGroup3"
+          options={[
+            { label: 'Apple', value: 'apple' },
+            { label: 'Pear', value: 'pear' },
+            { label: 'Orange', value: 'orange' },
+          ]}
+        />
+        <ColFormCheckboxGroup
+          label="复选框(配置-请求)"
+          name="checkboxGroup4"
+          store={() => getDirctData('ocmcUserType')}
+        />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>

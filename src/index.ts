@@ -3,6 +3,7 @@ import 'antd/dist/antd.min.css';
 export { default as OverflowShowbox } from './OverflowShowbox';
 export {
   ColFormCheckbox,
+  ColFormCheckboxGroup,
   ColFormDatePicker,
   ColFormInput,
   ColFormInputNumber,
