@@ -12,6 +12,7 @@ import {
   ColFormSearch,
   ColFormSelect,
   ColFormSwitch,
+  ColFormTags,
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
@@ -160,13 +161,13 @@ export default () => {
         <ColFormInput label="金额" name="money" type="number" />
 
         <ColFormSelect
-          label="用户类型"
+          label="用户类型1"
           name="typeCode1"
           store={() => getDirctData('ocmcUserType')}
         />
 
         <ColFormSelect
-          label="用户类型"
+          label="用户类型2"
           name="typeCode2"
           // mode="multiple"
           store={({ filters }) => getDirctData('ocmcUserType', count, filters)}
@@ -262,6 +263,7 @@ export default () => {
           store={() => getDirctData('ocmcUserType')}
         />
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
+        <ColFormTags label="标签" name="tags" />
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
     </>

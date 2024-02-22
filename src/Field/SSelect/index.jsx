@@ -73,9 +73,8 @@ export const SSelect = forwardRef(
 
     const errorMessage = error && error.message;
     const arrOptions = useMemo(() => {
-      const newData = Array.isArray(data) ? data : data?.list || [];
-      const arr =
-        typeof options === 'function' ? options(newData) : options || [];
+      const newData = Array.isArray(data) ? data : [];
+      const arr = typeof options === 'function' ? options(newData) : options;
 
       return (arr || newData).map((res, i) => {
         return {
