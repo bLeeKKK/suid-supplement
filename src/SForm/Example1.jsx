@@ -164,6 +164,9 @@ export default () => {
           label="用户类型1"
           name="typeCode1"
           store={() => getDirctData('ocmcUserType')}
+          onChange={(...p) => {
+            console.log(...p);
+          }}
         />
 
         <ColFormSelect
@@ -177,8 +180,6 @@ export default () => {
           initialValue={['personal_zh-CN']}
           noWrap
           searchForStore
-          // show
-          // hideMb8px
         >
           {(arr, Option) =>
             [...arr, { label: '追加的数据', value: 'xxx' }].map((item) => (

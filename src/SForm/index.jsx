@@ -79,6 +79,7 @@ export const withFormItem = (Component, type) => {
       initialValue,
       rules,
       renderCondition,
+      onChange,
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
 
@@ -155,7 +156,14 @@ export const withFormItem = (Component, type) => {
           initialValue: initVal,
           rules,
           ...filedOptions,
-        })(<Component show={showFlag} form={form} {...residue} />)}
+        })(
+          <Component
+            show={showFlag}
+            form={form}
+            onChange={onChange && ((...params) => onChange(...params, form))}
+            {...residue}
+          />,
+        )}
       </Form.Item>
     );
   };
@@ -165,13 +173,12 @@ export const withFormItem = (Component, type) => {
 
 // 创建Col包裹的项目
 export const withFormColItem = (Component) => {
-  const App = ({ span, hide, colProps = {}, flexSpan, rules, ...props }) => {
+  const App = ({ span, hide, colProps = {}, flexSpan, ...props }) => {
     return (
       <SCol {...colProps} hide={hide} span={span}>
         {({ basicSpan, itemSpan }) => {
           return (
             <Component
-              rules={hide ? [] : rules}
               autoScale={flexSpan ? basicSpan / itemSpan : flexSpan} // 自动计算占用比例
               {...props}
             />
