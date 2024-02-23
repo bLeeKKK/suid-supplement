@@ -1,6 +1,7 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
 import { Button, Form, Icon, Tooltip } from 'antd';
 import classnames from 'classnames';
+import objectPath from 'object-path';
 import React, {
   createContext,
   forwardRef,
@@ -125,7 +126,9 @@ export const withFormItem = (Component, type) => {
     const scale =
       layout.labelCol.span / (layout.wrapperCol.span + layout.labelCol.span);
 
-    const initVal = initialValues ? initialValues[name] : initialValue;
+    const initVal = initialValues
+      ? objectPath.get(initialValues, name)
+      : initialValue;
 
     return (
       <Form.Item

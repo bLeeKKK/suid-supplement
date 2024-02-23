@@ -1,6 +1,6 @@
 import { Tooltip } from 'antd';
 import React from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.css';
 
 const OverflowShowbox = ({ children }) => {
   return (
