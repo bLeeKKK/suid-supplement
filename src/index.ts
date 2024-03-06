@@ -35,7 +35,9 @@ export {
   FormTimePicker,
   FormWeekPicker,
   default as SForm,
+  useGetForm,
   withFormColItem,
   withFormItem,
 } from './SForm';
+export { default as SModal } from './SModal';
 export { default as Upload } from './Upload';

@@ -21,9 +21,6 @@ import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
 import SRow from '../SRow';
 import styles from './styles.module.less';
-// import Address from '../Address';
-// import EditFile from '../EditFile';
-// import AntdUpload from '../AntdUpload';
 
 const LabelBox = ({ title, tip }) => {
   return (

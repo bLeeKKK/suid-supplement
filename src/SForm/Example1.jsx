@@ -53,6 +53,7 @@ const getUserData = async ({ current, pageSize, filters }, count) => {
 };
 
 export default () => {
+  const [addInput, setAddInput] = React.useState(false);
   const [count, setCount] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
   const formRef = React.useRef();
@@ -64,6 +65,7 @@ export default () => {
         onChange={() => setChecked((check) => !check)}
       />
       <Button onClick={() => console.log(formRef)}>获取Ref</Button>
+      <Button onClick={() => setAddInput((f) => !f)}>追加输入框</Button>
       <hr />
       <SForm
         justShow={checked}
@@ -71,11 +73,18 @@ export default () => {
         formButtons
         onFinish={console.log}
         ref={formRef}
-        // initialValues={{
-        //   checkbox: true,
-        // }}
+        initialValues={{
+          description: 'zzz',
+          userName1: 'xxx',
+          checkbox: true,
+          user: {
+            userName: '张三',
+            phone: '123',
+          },
+        }}
         // form={form}
       >
+        {addInput && <ColFormInput label="追加Input" name="addInput" />}
         <ColFormTextArea
           label="描述"
           span={24}
@@ -117,7 +126,7 @@ export default () => {
 
         <ColFormInput
           label="用户名"
-          name="userName"
+          name="user.userName"
           rules={[
             {
               required: true,
@@ -128,8 +137,8 @@ export default () => {
         />
         <ColFormInput
           label="电话"
-          name="phone"
-          show={(form) => form?.getFieldValue('userName') === '张三'}
+          name="user.phone"
+          // show={(form) => form?.getFieldValue('userName') === '张三'}
           rules={[
             {
               required: true,
@@ -141,12 +150,12 @@ export default () => {
           label="电话隐藏"
           name="phoneHide"
           hide
-          rules={[
-            {
-              required: true,
-              message: '请输入电话隐藏',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '请输入电话隐藏',
+          //   },
+          // ]}
         />
 
         <ColFormInput
