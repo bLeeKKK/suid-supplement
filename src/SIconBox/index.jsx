@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import styles from './styles.module.less';
+import './styles.less';
 
 export const IconContext = createContext({});
 export const useIconContext = () => useContext(IconContext);
@@ -266,7 +266,7 @@ const SubMenu = ({
   return (
     <Menu.SubMenu
       title={titleBox}
-      popupClassName={classnames(popupClassName, styles['s-s-submenu'])}
+      popupClassName={classnames(popupClassName, 's-s-submenu')}
       {...props}
     >
       {children}
@@ -305,7 +305,7 @@ const IconMenus = ({ children, onClick, ...props }) => {
 
   return (
     <IconContext.Provider value={{ inLoadingObj }}>
-      <div className={styles['s-s-menu']}>
+      <div className="s-s-menu">
         <Menu selectable={false} onClick={click} {...props} mode="horizontal">
           {children}
         </Menu>
