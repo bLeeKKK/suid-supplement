@@ -1,0 +1,76 @@
+.s-s-menu {
+  // 设置组件内部的样式
+  :global {
+    ul.ant-menu-horizontal {
+      line-height: 24px;
+      border-bottom: none;
+
+      .divider-horizontal {
+        margin: 0;
+        margin-bottom: 4px;
+      }
+
+      .divider-vertical {
+        display: none;
+      }
+
+      .title-span {
+        display: none;
+      }
+
+      li {
+        &.ant-menu-item,
+        &.ant-menu-submenu {
+          padding-left: 0;
+          padding-right: 0;
+          margin-right: 8px;
+          margin-left: 8px;
+
+          .anticon {
+            margin-right: 0;
+          }
+        }
+
+        .ant-menu-submenu-title {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        a {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+// 竖向排列
+:global {
+  ul.ant-menu.ant-menu-vertical {
+    .divider-vertical {
+      margin: 0;
+    }
+
+    .divider-horizontal {
+      display: none;
+    }
+  }
+}
+
+// 子菜单样式
+// .s-s-submenu {
+//   :global {
+//     ul {
+//       li {
+//         & .ant-menu-item-group-title {
+//           padding: 4px 8px;
+//         }
+//         &.ant-menu-item,
+//         .ant-menu-submenu-title {
+//           height: 24px;
+//           line-height: 24px;
+//         }
+//       }
+//     }
+//   }
+// }
