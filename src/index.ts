@@ -40,6 +40,11 @@ export {
   withFormColItem,
   withFormItem,
 } from './SForm';
-export { default as IconMenus, IconsBox, useIconContext } from './SIconBox';
+export {
+  default as IconMenus,
+  IconsBox,
+  SIcon,
+  useIconContext,
+} from './SIconBox';
 export { default as SModal } from './SModal';
 export { default as Upload } from './Upload';
