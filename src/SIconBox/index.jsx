@@ -12,26 +12,17 @@ import './styles.less';
 export const IconContext = createContext({});
 export const useIconContext = () => useContext(IconContext);
 
-const SIcon = (props) => {
-  const { tooltip = {}, title, separa, style = {} } = props;
-  const separation = separa ? <Divider type="vertical" /> : null;
+export const SIcon = (props) => {
+  const { tooltip = {}, title, ...restProps } = props;
 
   const icon = (
     <span>
-      <Icon
-        style={{
-          ...style,
-          // pointerEvents: disabled ? 'none' : '',
-          // color: disabled ? 'rgba(0, 0, 0, 0.25)' : '',
-        }}
-        {...props}
-      />
+      <Icon {...restProps} />
     </span>
   );
 
   return (
     <>
-      {separation}
       {title ? (
         <Tooltip title={title} {...tooltip}>
           {icon}
@@ -44,7 +35,7 @@ const SIcon = (props) => {
 };
 
 export const ActionIcon = ({ ...props }) => {
-  const { render, wrap, loading = false, onClick, separa, ...resProps } = props;
+  const { render, wrap, loading = false, onClick, ...resProps } = props;
   const [inLoading, setInLoading] = useState(false);
   const click = useCallback(
     (...args) => {
@@ -63,17 +54,15 @@ export const ActionIcon = ({ ...props }) => {
   const IconDom = (
     <>
       {loading || inLoading ? (
-        <SIcon separa={separa} type="loading" />
+        <SIcon type="loading" />
       ) : (
-        <SIcon separa={separa} onClick={click} {...resProps} hide={undefined} />
+        <SIcon onClick={click} {...resProps} hide={undefined} />
       )}
     </>
   );
   const IconDomA = IconDom;
 
-  return render
-    ? render({ dom: IconDomA, separa, iconOrMenu: 'icon' })
-    : IconDomA;
+  return render ? render({ dom: IconDomA, iconOrMenu: 'icon' }) : IconDomA;
 };
 
 export const ActionMenu = ({ res }) => {
@@ -127,11 +116,14 @@ export const IconsBox = ({ iconArr = [], limt, moreIcon = 'more' }) => {
 
   const icons = (
     <>
-      {beforArr.map((res) => (
-        <span key={`map-${res.type}`}>
-          <ActionIcon {...res} separa={beforArr?.[0]?.type !== res.type} />
-        </span>
-      ))}
+      {beforArr.map((res, index) => {
+        return (
+          <span key={`map-${res.type}`}>
+            {index !== 0 ? <Divider type="vertical" /> : null}
+            <ActionIcon {...res} />
+          </span>
+        );
+      })}
 
       {arr.length ? (
         <Dropdown
@@ -147,7 +139,8 @@ export const IconsBox = ({ iconArr = [], limt, moreIcon = 'more' }) => {
           }
         >
           <span>
-            <SIcon separa={!!beforArr.length} type={moreIcon} />
+            {!!beforArr.length ? <Divider type="vertical" /> : null}
+            <SIcon type={moreIcon} />
           </span>
         </Dropdown>
       ) : null}

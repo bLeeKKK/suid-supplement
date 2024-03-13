@@ -125,6 +125,7 @@ export default () => {
         />
 
         <ColFormInput
+          tip="这里是【用户名】的说明提示"
           label="用户名"
           name="user.userName"
           rules={[

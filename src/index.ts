@@ -36,6 +36,7 @@ export {
   FormWeekPicker,
   default as SForm,
   useGetForm,
+  useWatch,
   withFormColItem,
   withFormItem,
 } from './SForm';

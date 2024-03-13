@@ -1,5 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Button, Form, Icon, Tooltip } from 'antd';
+import { Button, Form } from 'antd';
 import classnames from 'classnames';
 import objectPath from 'object-path';
 import React, {
@@ -19,19 +19,20 @@ import SSwitch from '../Field/SSwitch';
 import STags from '../Field/STags';
 import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
+import { SIcon } from '../SIconBox';
 import SRow from '../SRow';
 import styles from './styles.module.less';
 
-const LabelBox = ({ title, tip }) => {
+const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
   return (
-    <span className="align-middle" title={title}>
-      {title}
-      {tip ? (
-        <Tooltip title={tip}>
+    <span className="align-middle" title={label}>
+      {label}
+      {tip && (
+        <>
           &nbsp;
-          <Icon type="question-circle-o" />
-        </Tooltip>
-      ) : null}
+          <SIcon type={tipIcon} title={tip} />
+        </>
+      )}
     </span>
   );
 };
@@ -42,11 +43,17 @@ export const SFormContext = createContext();
 export const useGetForm = () => React.useContext(SFormContext);
 export const SRowContext = createContext();
 
-// hooks
+/**
+ * 表单项值监听
+ * @param names {Array} 监听的表单项名称
+ * @param f {Object} form对象
+ *
+ * @returns {Object} 返回监听的表单项值
+ * */
 export const useWatch = (names, f) => {
-  const formObj = useGetForm();
-  const form = formObj?.form || f;
   const [watch, setWatch] = useState({});
+  const formObj = useGetForm();
+  const form = f || formObj?.form;
   const vals = form?.getFieldsValue(names) || {};
   useDeepCompareEffect(() => {
     setWatch(vals);
@@ -67,6 +74,7 @@ export const withFormItem = (Component, type) => {
       name,
       label,
       tip,
+      tipIcon,
       styleItem,
       className,
       show,
@@ -129,7 +137,7 @@ export const withFormItem = (Component, type) => {
 
     return (
       <Form.Item
-        label={label && <LabelBox tip={tip} title={label} />}
+        label={label && <LabelBox tip={tip} label={label} tipIcon={tipIcon} />}
         {...layout}
         style={{
           ...(hideMb8pxFlag ? { marginBottom: '0' } : {}),
