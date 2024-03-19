@@ -35,7 +35,7 @@ export const SIcon = (props) => {
 };
 
 export const ActionIcon = ({ ...props }) => {
-  const { render, wrap, loading = false, onClick, ...resProps } = props;
+  const { render, loading = false, onClick, ...resProps } = props;
   const [inLoading, setInLoading] = useState(false);
   const click = useCallback(
     (...args) => {
@@ -67,7 +67,7 @@ export const ActionIcon = ({ ...props }) => {
 
 export const ActionMenu = ({ res }) => {
   const [inLoading, setInLoading] = useState(false);
-  const { render, wrap, loading = false, onClick, ...resProps } = res;
+  const { render, loading = false, onClick, ...resProps } = res;
   const click = (...args) => {
     const r = onClick(...args);
     if (r && r.then) {
@@ -155,12 +155,12 @@ const DividerLine = ({ className, props }) => {
     <>
       <Divider
         type="vertical"
-        className={classnames(className, 'divider-horizontal')}
+        className={classnames(className, 's-s-icon-divider-horizontal')}
         {...props}
       />
       <Divider
         type="horizontal"
-        className={classnames(className, 'divider-vertical')}
+        className={classnames(className, 's-s-icon-divider-vertical')}
         {...props}
       />
     </>
@@ -259,7 +259,7 @@ const SubMenu = ({
   return (
     <Menu.SubMenu
       title={titleBox}
-      popupClassName={classnames(popupClassName, 's-s-submenu')}
+      // popupClassName={classnames(popupClassName, 's-s-icon-submenu')}
       {...props}
     >
       {children}
@@ -298,7 +298,7 @@ const IconMenus = ({ children, onClick, ...props }) => {
 
   return (
     <IconContext.Provider value={{ inLoadingObj }}>
-      <div className="s-s-menu">
+      <div className="s-s-icon-menu">
         <Menu selectable={false} onClick={click} {...props} mode="horizontal">
           {children}
         </Menu>
