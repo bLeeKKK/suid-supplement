@@ -1,7 +1,7 @@
 import 'antd/dist/antd.min.css';
 
 export { default as OverflowShowbox } from './OverflowShowbox';
-export { ActionBtn, default as BtnsBox, useBtnContext } from './SBtnBox';
+export { ActionBtn, default as BtnsBox } from './SBtnBox';
 export {
   ColFormCheckbox,
   ColFormCheckboxGroup,

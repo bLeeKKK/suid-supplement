@@ -1,10 +1,7 @@
 import { Button, Dropdown, Icon, Menu, Tooltip } from 'antd';
 import classnames from 'classnames';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './styles.less';
-
-export const BtnContext = createContext({});
-export const useBtnContext = () => useContext(BtnContext);
 
 export const SBtn = (props) => {
   const {
