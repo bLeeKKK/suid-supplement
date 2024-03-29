@@ -49,4 +49,5 @@ export {
   useIconContext,
 } from './SIconBox';
 export { default as SModal } from './SModal';
+export { default as STable } from './STable';
 export { default as Upload } from './Upload';
