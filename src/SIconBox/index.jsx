@@ -13,11 +13,14 @@ export const IconContext = createContext({});
 export const useIconContext = () => useContext(IconContext);
 
 export const SIcon = (props) => {
-  const { tooltip = {}, title, ...restProps } = props;
+  const { tooltip = {}, title, className, ...restProps } = props;
 
   const icon = (
     <span>
-      <Icon {...restProps} />
+      <Icon
+        {...restProps}
+        className={classnames(className, 'hover:text-[#198FFF]')}
+      />
     </span>
   );
 
