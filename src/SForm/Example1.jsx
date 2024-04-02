@@ -13,7 +13,6 @@ import {
   ColFormSearch,
   ColFormSelect,
   ColFormSwitch,
-  ColFormTags,
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
@@ -317,7 +316,7 @@ export default () => {
           store={() => getDirctData('ocmcUserType')}
         />
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
-        <ColFormTags label="标签" name="tags" />
+        {/* <ColFormTags label="标签" name="tags" /> */}
       </SForm>
       <Button onClick={() => formRef?.current?.finish?.({ andScroll: true })}>
         自定义提交
