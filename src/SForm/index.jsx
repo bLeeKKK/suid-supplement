@@ -1,5 +1,5 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Button, Form } from 'antd';
+import { Affix, Button, Form } from 'antd';
 import classnames from 'classnames';
 import objectPath from 'object-path';
 import React, {
@@ -65,16 +65,23 @@ export const useWatch = (names, f) => {
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
-    const { form, justShow, formFieldLayout, initialValues, itemPropsDefault } =
-      useGetForm() || {
-        form: props.form,
-      };
+    const {
+      form,
+      disabled,
+      justShow,
+      formFieldLayout,
+      initialValues,
+      itemPropsDefault,
+    } = useGetForm() || {
+      form: props.form,
+    };
 
     const {
       name,
       label,
       tip,
       tipIcon,
+      filedTip,
       styleItem,
       className,
       show,
@@ -135,6 +142,45 @@ export const withFormItem = (Component, type) => {
       ? objectPath.get(initialValues, name)
       : initialValue;
 
+    let filed = getFieldDecorator(name, {
+      type,
+      initialValue: initVal,
+      rules,
+      ...filedOptions,
+    })(
+      <Component
+        show={showFlag}
+        form={form}
+        onChange={onChange && ((...params) => onChange(...params, form))}
+        disabled={disabled}
+        {...residue}
+      />,
+    );
+
+    // if (filedTip) {
+    //   const type = getType(filedTip);
+    //
+    //   /**
+    //    * 注：这里有个良性的bug
+    //    * Tooltip 的实现方式是，使用的className来控制显示隐藏 antd-tooltip-open
+    //    * 但是这里使用的是【getFieldDecorator】创建的组件，
+    //    * filed里面没有，或者外部html标签的话，就不能展示
+    //    * */
+    //   if (type === 'string') {
+    //     filed = (
+    //       <Tooltip title={filedTip}>
+    //         <div style={{ display: 'inline-block' }}>{filed}</div>
+    //       </Tooltip>
+    //     );
+    //   } else if (type === 'object') {
+    //     filed = (
+    //       <Tooltip {...filedTip}>
+    //         <div style={{ display: 'inline-block' }}>{filed}</div>
+    //       </Tooltip>
+    //     );
+    //   }
+    // }
+
     return (
       <Form.Item
         label={label && <LabelBox tip={tip} label={label} tipIcon={tipIcon} />}
@@ -159,19 +205,7 @@ export const withFormItem = (Component, type) => {
           : {})}
         className={classnames(styles['ss-form-item'], className)}
       >
-        {getFieldDecorator(name, {
-          type,
-          initialValue: initVal,
-          rules,
-          ...filedOptions,
-        })(
-          <Component
-            show={showFlag}
-            form={form}
-            onChange={onChange && ((...params) => onChange(...params, form))}
-            {...residue}
-          />,
-        )}
+        {filed}
       </Form.Item>
     );
   };
@@ -273,19 +307,25 @@ const FormBox = forwardRef(
       // 不需要Form包裹
       noFormWrap = false,
       passageValue,
+      disabled,
       ...props
     },
     ref,
   ) => {
+    const [loading, setLoading] = useState(false);
     useImperativeHandle(ref, () => form);
 
     const finish = useMemoizedFn(
-      async ({ verification = true, trim = false } = {}) => {
+      async ({ verification = true, trim = false, andScroll = false } = {}) => {
         let types = null;
         let values = null;
 
         if (verification) {
-          values = await form.validateFields();
+          if (andScroll) {
+            values = await form.validateFieldsAndScroll();
+          } else {
+            values = await form.validateFields();
+          }
         } else {
           values = await form.getFieldsValue();
         }
@@ -307,9 +347,19 @@ const FormBox = forwardRef(
           return newObj;
         }, {});
 
-        if (onFinish) onFinish(values, types);
-
-        return [values, types];
+        if (onFinish) {
+          const result = onFinish(values, types);
+          if (result?.finally) {
+            setLoading(true);
+            result.finally((res) => {
+              setLoading(false);
+              return res;
+            });
+          }
+          return result;
+        } else {
+          return [values, types];
+        }
       },
     );
 
@@ -325,6 +375,8 @@ const FormBox = forwardRef(
           justShow,
           initialValues,
           itemPropsDefault,
+          disabled: disabled ?? loading,
+          loading,
           ...(passageValue || {}),
         }}
       >
@@ -388,45 +440,60 @@ const SForm = forwardRef(
       <SFormBox ref={saveFormRef} {...props}>
         <SRow basicSpan={basicSpan} {...rowProps}>
           {children}
-          {formButtons && (
-            <SCol
-              span={24}
+        </SRow>
+        {formButtons && (
+          <Affix offsetBottom={0}>
+            <div
               style={{
+                // boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.15)',
                 textAlign: 'right',
                 borderTop: '1px solid #D9D9D9',
-                margin: '8px 0 0 0',
-                padding: '8px 16px 0 16px',
+                padding: '8px 16px 8px 16px',
+                background: '#fff',
               }}
             >
-              {Array.isArray(formButtons) ? (
-                formButtons
-              ) : (
-                <>
-                  {formButtons.readditionBtns}
-                  <Button
-                    style={{ marginRight: 8 }}
-                    onClick={() => saveFormRef?.current?.resetFields()}
-                  >
-                    重置
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={() => saveFormRef?.current?.finish()}
-                    {...(formButtons.submitButtonProps || {})}
-                    htmlType="submit"
-                  >
-                    提交
-                  </Button>
-                </>
-              )}
-            </SCol>
-          )}
-        </SRow>
+              <SFormContext.Consumer>
+                {typeof formButtons === 'function'
+                  ? formButtons
+                  : ({ loading }) => {
+                      return (
+                        <SRow basicSpan={basicSpan}>
+                          <SCol span={24}>
+                            <Button
+                              disabled={loading}
+                              style={{ marginRight: 8 }}
+                              onClick={() =>
+                                saveFormRef?.current?.resetFields()
+                              }
+                            >
+                              重置
+                            </Button>
+                            <Button
+                              loading={loading}
+                              type="primary"
+                              onClick={() =>
+                                saveFormRef?.current?.finish({
+                                  andScroll: true,
+                                })
+                              }
+                              htmlType="submit"
+                            >
+                              提交
+                            </Button>
+                          </SCol>
+                        </SRow>
+                      );
+                    }}
+              </SFormContext.Consumer>
+            </div>
+          </Affix>
+        )}
       </SFormBox>
     );
   },
 );
 
 SForm.SFormBox = SFormBox;
+// SForm.Provider = SFormContext.Provider;
 
 export default SForm;

@@ -44,9 +44,10 @@ export const ActionBtn = (props) => {
     (...args) => {
       if (!onClick) return;
       const r = onClick(...args);
-      if (r && r.then) {
+      console.log(r, 'r');
+      if (r && r.finally) {
         setInLoading(true);
-        r.then(() => {
+        r.finally(() => {
           setInLoading(false);
         });
       }
@@ -78,9 +79,9 @@ export const ActionMenu = ({ res }) => {
   } = res;
   const click = (...args) => {
     const r = onClick(...args);
-    if (r && r.then) {
+    if (r && r.finally) {
       setInLoading(true);
-      r.then(() => {
+      r.finally(() => {
         setInLoading(false);
       });
     }

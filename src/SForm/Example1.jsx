@@ -1,4 +1,4 @@
-import { Button, Checkbox, Switch } from 'antd';
+import { Button, Checkbox, Switch, Tooltip } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import {
@@ -6,6 +6,7 @@ import {
   ColFormCheckboxGroup,
   ColFormDatePicker,
   ColFormInput,
+  ColFormInputNumber,
   ColFormMonthPicker,
   ColFormRadioGroup,
   ColFormRangePicker,
@@ -71,7 +72,14 @@ export default () => {
         justShow={checked}
         basicSpan={12}
         formButtons
-        onFinish={console.log}
+        onFinish={(values) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              console.log(values);
+              resolve();
+            }, 2000);
+          });
+        }}
         ref={formRef}
         initialValues={{
           description: 'zzz',
@@ -110,22 +118,25 @@ export default () => {
           initialValue="李四"
         />
 
-        <ColFormSearch
-          label="搜索"
-          flexSpan
-          span={24}
-          name="searchVal"
-          type="search"
-          onSearch={console.log}
-          shortcutKey
-          filedOptions={{
-            // 开启后将不再表单中出现，也不会做rules校验
-            hidden: true,
-          }}
-        />
+        <Tooltip title="搜索项、搜索项、搜索项">
+          <ColFormSearch
+            label="搜索"
+            flexSpan
+            span={24}
+            name="searchVal"
+            type="search"
+            onSearch={console.log}
+            shortcutKey
+            filedOptions={{
+              // 开启后将不再表单中出现，也不会做rules校验
+              hidden: true,
+            }}
+          />
+        </Tooltip>
 
         <ColFormInput
           tip="这里是【用户名】的说明提示"
+          filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
           label="用户名"
           name="user.userName"
           rules={[
@@ -136,6 +147,18 @@ export default () => {
           ]}
           initialValue="李四"
         />
+
+        <ColFormInput
+          tip="这里是【用户名】的说明提示"
+          filedTip={{
+            title: '这里是【用户名】的说明提示2 ',
+            placement: 'bottom',
+          }}
+          label="用户名"
+          name="userName"
+          initialValue="李四"
+        />
+
         <ColFormInput
           label="电话"
           name="user.phone"
@@ -168,12 +191,28 @@ export default () => {
 
         <ColFormInput label="地址" name="address" />
 
-        <ColFormInput label="金额" name="money" type="number" />
+        <ColFormInputNumber
+          rules={[
+            {
+              required: true,
+              message: '请输入金额',
+            },
+          ]}
+          label="金额"
+          name="money"
+          type="number"
+        />
 
         <ColFormSelect
           label="用户类型1"
           name="typeCode1"
           store={() => getDirctData('ocmcUserType')}
+          rules={[
+            {
+              required: true,
+              message: '请输入用户类型',
+            },
+          ]}
           onChange={(...p) => {
             console.log(...p);
           }}
@@ -226,7 +265,11 @@ export default () => {
         <ColFormWeekPicker label="周选择" name="dateWeek" />
 
         <ColFormCheckbox label="复选框" name="checkbox" />
-        <ColFormCheckboxGroup label="复选框(子项)" name="checkboxGroup">
+        <ColFormCheckboxGroup
+          filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
+          label="复选框(子项)"
+          name="checkboxGroup"
+        >
           <Checkbox value="xxx">xxx</Checkbox>
           <Checkbox value="yyy">yyy</Checkbox>
         </ColFormCheckboxGroup>
@@ -276,7 +319,9 @@ export default () => {
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
         <ColFormTags label="标签" name="tags" />
       </SForm>
-      <Button onClick={() => formRef?.current?.finish?.()}>自定义提交</Button>
+      <Button onClick={() => formRef?.current?.finish?.({ andScroll: true })}>
+        自定义提交
+      </Button>
     </>
   );
 };
