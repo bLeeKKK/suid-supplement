@@ -1,6 +1,6 @@
 import { useControllableValue } from 'ahooks';
 import { Input } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
 const SInput = forwardRef(
@@ -8,9 +8,6 @@ const SInput = forwardRef(
     { show = false, renderForShow, overflowShowTip = true, form, ...props },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -31,7 +28,7 @@ const SInput = forwardRef(
       return [flag, val];
     }, [show, value, form, renderForShow, overflowShowTip]);
 
-    return showFlag ? showValue : <Input {...props} ref={inputrRef} />;
+    return showFlag ? showValue : <Input {...props} ref={ref} />;
   },
 );
 

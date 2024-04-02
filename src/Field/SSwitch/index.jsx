@@ -1,22 +1,14 @@
 import { useControllableValue } from 'ahooks';
 import { Switch } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 
 const SSwitch = forwardRef(
   ({ show = false, renderForShow, form, ...props }, ref) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
       let val = (
-        <Switch
-          {...props}
-          checked={value}
-          onChange={() => {}}
-          ref={inputrRef}
-        />
+        <Switch {...props} checked={value} onChange={() => {}} ref={ref} />
       );
 
       if (typeof renderForShow === 'function') {
@@ -29,7 +21,7 @@ const SSwitch = forwardRef(
     return showFlag ? (
       showValue
     ) : (
-      <Switch {...props} checked={value} ref={inputrRef} />
+      <Switch {...props} checked={value} ref={ref} />
     );
   },
 );

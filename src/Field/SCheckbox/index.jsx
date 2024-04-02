@@ -1,6 +1,6 @@
 import { useControllableValue, useRequest } from 'ahooks';
 import { Checkbox, Icon, Spin, Tooltip } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
 const CheckboxGroup = Checkbox.Group;
@@ -10,19 +10,11 @@ const SCheckbox = forwardRef(
     { show = false, renderForShow, overflowShowTip = true, form, ...props },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
       let val = (
-        <Checkbox
-          {...props}
-          checked={value}
-          onChange={() => {}}
-          ref={inputrRef}
-        />
+        <Checkbox {...props} checked={value} onChange={() => {}} ref={ref} />
       );
 
       if (typeof renderForShow === 'function') {
@@ -43,7 +35,7 @@ const SCheckbox = forwardRef(
     return showFlag ? (
       showValue
     ) : (
-      <Checkbox {...props} checked={value} ref={inputrRef} />
+      <Checkbox {...props} checked={value} ref={ref} />
     );
   },
 );
@@ -75,7 +67,6 @@ const SCheckboxGroup = forwardRef(
       ready: !!store,
       ...storeOption,
     });
-    const inputrRef = useRef();
     const errorMessage = error && error.message;
     const arrOptions = useMemo(() => {
       const newData = Array.isArray(data) ? data : [];
@@ -94,7 +85,6 @@ const SCheckboxGroup = forwardRef(
         return newArr;
       }
     }, [options, data, reader]);
-    useImperativeHandle(ref, () => ({ inputrRef }));
 
     const optionChildren =
       typeof children === 'function'
@@ -110,7 +100,7 @@ const SCheckboxGroup = forwardRef(
           options={optionChildren ? undefined : arrOptions}
           checked={value}
           onChange={() => {}}
-          ref={inputrRef}
+          ref={ref}
         >
           {optionChildren}
         </CheckboxGroup>
@@ -139,7 +129,7 @@ const SCheckboxGroup = forwardRef(
           {...props}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
-          ref={inputrRef}
+          ref={ref}
         >
           {optionChildren}
         </CheckboxGroup>

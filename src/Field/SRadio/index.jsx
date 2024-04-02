@@ -1,6 +1,6 @@
 import { useControllableValue, useRequest } from 'ahooks';
 import { Icon, Radio, Spin, Tooltip } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
 const RadioGroup = Radio.Group;
@@ -10,14 +10,11 @@ const SRadio = forwardRef(
     { show = false, renderForShow, overflowShowTip = true, form, ...props },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
       let val = (
-        <Radio {...props} checked={value} onChange={() => {}} ref={inputrRef} />
+        <Radio {...props} checked={value} onChange={() => {}} ref={ref} />
       );
 
       if (typeof renderForShow === 'function') {
@@ -38,7 +35,7 @@ const SRadio = forwardRef(
     return showFlag ? (
       showValue
     ) : (
-      <Radio {...props} checked={value} ref={inputrRef} />
+      <Radio {...props} checked={value} ref={ref} />
     );
   },
 );
@@ -70,7 +67,6 @@ const SRadioGroup = forwardRef(
       ready: !!store,
       ...storeOption,
     });
-    const inputrRef = useRef();
     const errorMessage = error && error.message;
     const arrOptions = useMemo(() => {
       const newData = Array.isArray(data) ? data : [];
@@ -89,7 +85,6 @@ const SRadioGroup = forwardRef(
         return newArr;
       }
     }, [options, data, reader]);
-    useImperativeHandle(ref, () => ({ inputrRef }));
 
     const optionChildren =
       typeof children === 'function' ? children(arrOptions, Radio) : children;
@@ -103,7 +98,7 @@ const SRadioGroup = forwardRef(
           options={optionChildren ? undefined : arrOptions}
           checked={value}
           onChange={() => {}}
-          ref={inputrRef}
+          ref={ref}
         >
           {optionChildren}
         </RadioGroup>
@@ -132,7 +127,7 @@ const SRadioGroup = forwardRef(
           {...props}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
-          ref={inputrRef}
+          ref={ref}
         >
           {optionChildren}
         </RadioGroup>

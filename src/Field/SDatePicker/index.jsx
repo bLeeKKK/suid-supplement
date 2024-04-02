@@ -1,6 +1,6 @@
 import { useControllableValue } from 'ahooks';
 import { DatePicker } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
 const { RangePicker, MonthPicker, WeekPicker } = DatePicker;
@@ -18,9 +18,6 @@ const SDatePicker = forwardRef(
     },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -48,7 +45,7 @@ const SDatePicker = forwardRef(
         {...props}
         style={{ width: '100%', ...(style || {}) }}
         format={format}
-        ref={inputrRef}
+        ref={ref}
       />
     );
   },
@@ -67,9 +64,6 @@ const SMonthPicker = forwardRef(
     },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -97,7 +91,7 @@ const SMonthPicker = forwardRef(
         {...props}
         style={{ width: '100%', ...(style || {}) }}
         format={format}
-        ref={inputrRef}
+        ref={ref}
       />
     );
   },
@@ -116,9 +110,6 @@ const SWeekPicker = forwardRef(
     },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -146,7 +137,7 @@ const SWeekPicker = forwardRef(
         {...props}
         style={{ width: '100%', ...(style || {}) }}
         format={format}
-        ref={inputrRef}
+        ref={ref}
       />
     );
   },
@@ -167,9 +158,6 @@ const SRangePicker = forwardRef(
     },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -206,7 +194,7 @@ const SRangePicker = forwardRef(
         style={{ width: '100%', ...(style || {}) }}
         format={format}
         showTime={showTime}
-        ref={inputrRef}
+        ref={ref}
       />
     );
   },

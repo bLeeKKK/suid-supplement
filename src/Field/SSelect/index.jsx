@@ -5,7 +5,6 @@ import React, {
   forwardRef,
   useCallback,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -91,8 +90,6 @@ export const SSelect = forwardRef(
     const searchRef = useRef();
     const menuRef = useRef();
     const [value] = useControllableValue(props);
-
-    useImperativeHandle(ref, () => ({}));
 
     const hide = useCallback(
       (e) => {
@@ -218,6 +215,7 @@ export const SSelect = forwardRef(
           showSearch
           optionFilterProp="label"
           {...props}
+          ref={ref}
           mode={mode}
           suffixIcon={
             errorMessage && (
