@@ -316,7 +316,7 @@ const FormBox = forwardRef(
     useImperativeHandle(ref, () => form);
 
     const finish = useMemoizedFn(
-      async ({ verification = true, trim = false, andScroll = false } = {}) => {
+      async ({ verification = true, trim = false, andScroll = true } = {}) => {
         let types = null;
         let values = null;
 
@@ -433,11 +433,11 @@ const SFormBox = forwardRef(({ form, ...props }, ref) => {
  * */
 const SForm = forwardRef(
   ({ basicSpan = 8, rowProps = {}, formButtons, children, ...props }, ref) => {
-    const saveFormRef = React.useRef();
-    useImperativeHandle(ref, () => saveFormRef?.current);
+    // const saveFormRef = React.useRef();
+    // useImperativeHandle(ref, () => saveFormRef?.current);
 
     return (
-      <SFormBox ref={saveFormRef} {...props}>
+      <SFormBox ref={ref} {...props}>
         <SRow basicSpan={basicSpan} {...rowProps}>
           {children}
         </SRow>
@@ -455,28 +455,23 @@ const SForm = forwardRef(
               <SFormContext.Consumer>
                 {typeof formButtons === 'function'
                   ? formButtons
-                  : ({ loading }) => {
+                  : ({ loading, form }) => {
                       return (
                         <SRow basicSpan={basicSpan}>
                           <SCol span={24}>
                             <Button
                               disabled={loading}
                               style={{ marginRight: 8 }}
-                              onClick={() =>
-                                saveFormRef?.current?.resetFields()
-                              }
+                              onClick={() => form.resetFields()}
+                              {...(formButtons?.resetButtonProps || {})}
                             >
                               重置
                             </Button>
                             <Button
                               loading={loading}
                               type="primary"
-                              onClick={() =>
-                                saveFormRef?.current?.finish({
-                                  andScroll: true,
-                                })
-                              }
-                              htmlType="submit"
+                              onClick={() => form.finish()}
+                              {...(formButtons?.okButtonProps || {})}
                             >
                               提交
                             </Button>
@@ -494,6 +489,7 @@ const SForm = forwardRef(
 );
 
 SForm.SFormBox = SFormBox;
-// SForm.Provider = SFormContext.Provider;
+SForm.Provider = SFormContext.Provider;
+SForm.Consumer = SFormContext.Consumer;
 
 export default SForm;

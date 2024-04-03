@@ -2,6 +2,7 @@ import { Button, Checkbox, Switch, Tooltip } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import {
+  ActionBtn,
   ColFormCheckbox,
   ColFormCheckboxGroup,
   ColFormDatePicker,
@@ -17,6 +18,7 @@ import {
   ColFormTimePicker,
   ColFormWeekPicker,
   SForm,
+  SRow,
 } from 'suid-supplement';
 
 const getDirctData = async (code, count, filters) => {
@@ -104,7 +106,6 @@ export default () => {
             },
           ]}
         />
-
         <ColFormInput
           label="用户名1"
           name="userName1"
@@ -116,7 +117,6 @@ export default () => {
           ]}
           initialValue="李四"
         />
-
         <Tooltip title="搜索项、搜索项、搜索项">
           <ColFormSearch
             label="搜索"
@@ -132,7 +132,6 @@ export default () => {
             }}
           />
         </Tooltip>
-
         <ColFormInput
           tip="这里是【用户名】的说明提示"
           filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
@@ -146,7 +145,6 @@ export default () => {
           ]}
           initialValue="李四"
         />
-
         <ColFormInput
           tip="这里是【用户名】的说明提示"
           filedTip={{
@@ -157,7 +155,6 @@ export default () => {
           name="userName"
           initialValue="李四"
         />
-
         <ColFormInput
           label="电话"
           name="user.phone"
@@ -180,16 +177,13 @@ export default () => {
           //   },
           // ]}
         />
-
         <ColFormInput
           label="地址选择"
           flexSpan
           name="address1"
           initialValue={['110000', '110101']}
         />
-
         <ColFormInput label="地址" name="address" />
-
         <ColFormInputNumber
           rules={[
             {
@@ -201,7 +195,6 @@ export default () => {
           name="money"
           type="number"
         />
-
         <ColFormSelect
           label="用户类型1"
           name="typeCode1"
@@ -216,7 +209,6 @@ export default () => {
             console.log(...p);
           }}
         />
-
         <ColFormSelect
           label="用户类型2"
           name="typeCode2"
@@ -235,7 +227,6 @@ export default () => {
             ))
           }
         </ColFormSelect>
-
         <ColFormSelect
           span="16"
           flexSpan
@@ -256,13 +247,11 @@ export default () => {
           }}
           renderCondition={(form) => form?.getFieldValue('userName') === '李四'}
         />
-
         <ColFormTimePicker label="时间选择" name="time" />
         <ColFormDatePicker label="日期选择" name="date" />
         <ColFormRangePicker label="时间段选择" name="dateRange" />
         <ColFormMonthPicker label="月份选择" name="dateMounth" />
         <ColFormWeekPicker label="周选择" name="dateWeek" />
-
         <ColFormCheckbox label="复选框" name="checkbox" />
         <ColFormCheckboxGroup
           filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
@@ -317,10 +306,21 @@ export default () => {
         />
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
         {/* <ColFormTags label="标签" name="tags" /> */}
+
+        <SRow.SCol style={{ marginBottom: '8px' }} span={24}>
+          <SForm.Consumer>
+            {({ form, loading }) => (
+              <Button onClick={() => form.finish()} loading={loading}>
+                内部自定义按钮(能获取状态)
+              </Button>
+            )}
+          </SForm.Consumer>
+        </SRow.SCol>
       </SForm>
-      <Button onClick={() => formRef?.current?.finish?.({ andScroll: true })}>
-        自定义提交
-      </Button>
+
+      <ActionBtn onClick={() => formRef?.current?.finish?.()}>
+        自定义提交2
+      </ActionBtn>
     </>
   );
 };
