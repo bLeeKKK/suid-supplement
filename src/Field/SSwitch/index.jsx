@@ -8,7 +8,13 @@ const SSwitch = forwardRef(
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
       let val = (
-        <Switch {...props} checked={value} onChange={() => {}} ref={ref} />
+        <Switch
+          {...props}
+          checked={value}
+          disabled
+          onChange={() => {}}
+          ref={ref}
+        />
       );
 
       if (typeof renderForShow === 'function') {

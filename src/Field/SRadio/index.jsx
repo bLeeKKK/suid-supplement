@@ -1,36 +1,45 @@
 import { useControllableValue, useRequest } from 'ahooks';
 import { Icon, Radio, Spin, Tooltip } from 'antd';
-import React, { forwardRef, useMemo } from 'react';
-import OverflowShowbox from '../../OverflowShowbox';
+import classnames from 'classnames';
+import React, { createContext, forwardRef, useMemo } from 'react';
+import './style.less';
 
+const RadioContext = createContext();
+const useRadioContext = () => React.useContext(RadioContext);
 const RadioGroup = Radio.Group;
 
 const SRadio = forwardRef(
-  (
-    { show = false, renderForShow, overflowShowTip = true, form, ...props },
-    ref,
-  ) => {
+  ({ show = false, renderForShow, form, ...props }, ref) => {
+    const {
+      show: showGroup,
+      // inGroup
+    } = useRadioContext() || {};
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
-      const flag = !!show;
+      const flag = showGroup ?? !!show;
       let val = (
-        <Radio {...props} checked={value} onChange={() => {}} ref={ref} />
+        <Radio
+          {...props}
+          checked={value}
+          onChange={() => {}}
+          ref={ref}
+          disabled
+        />
       );
 
       if (typeof renderForShow === 'function') {
         val = renderForShow({ value, form, defaultShow: val });
       }
 
-      if (overflowShowTip) {
-        val = (
-          <div style={{ height: '40px' }}>
-            <OverflowShowbox>{val}</OverflowShowbox>
-          </div>
-        );
-      }
-
       return [flag, val];
-    }, [show, value, form, renderForShow, overflowShowTip]);
+    }, [
+      show,
+      showGroup,
+      value,
+      form,
+      renderForShow,
+      // overflowShowTip
+    ]);
 
     return showFlag ? (
       showValue
@@ -46,13 +55,14 @@ const SRadioGroup = forwardRef(
     {
       show = false,
       renderForShow,
-      overflowShowTip = true,
+      // overflowShowTip = true,
       form,
       options,
       store,
       storeOption = {},
       children,
       reader,
+      className,
       ...props
     },
     ref,
@@ -95,10 +105,12 @@ const SRadioGroup = forwardRef(
       let val = (
         <RadioGroup
           {...props}
+          className={classnames('s-radio-group', className)}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
           onChange={() => {}}
           ref={ref}
+          disabled
         >
           {optionChildren}
         </RadioGroup>
@@ -108,16 +120,22 @@ const SRadioGroup = forwardRef(
         val = renderForShow({ value, form, defaultShow: val });
       }
 
-      if (overflowShowTip) {
-        val = (
-          <div style={{ height: '40px' }}>
-            <OverflowShowbox>{val}</OverflowShowbox>
-          </div>
-        );
-      }
+      // if (overflowShowTip) {
+      //   val = (
+      //     <div style={{ height: '40px' }}>
+      //       <OverflowShowbox>{val}</OverflowShowbox>
+      //     </div>
+      //   );
+      // }
 
       return [flag, val];
-    }, [show, value, form, renderForShow, overflowShowTip]);
+    }, [
+      show,
+      value,
+      form,
+      renderForShow,
+      // overflowShowTip
+    ]);
 
     return showFlag ? (
       showValue
@@ -125,6 +143,7 @@ const SRadioGroup = forwardRef(
       <Spin spinning={loading}>
         <RadioGroup
           {...props}
+          className={classnames('s-radio-group', className)}
           options={optionChildren ? undefined : arrOptions}
           checked={value}
           ref={ref}
