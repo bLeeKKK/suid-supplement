@@ -1,4 +1,4 @@
-import { Button, Switch, Tooltip } from 'antd';
+import { Button, Switch } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import {
@@ -119,21 +119,23 @@ export default () => {
           ]}
           initialValue="李四"
         />
-        <Tooltip title="搜索项、搜索项、搜索项">
-          <ColFormSearch
-            label="搜索"
-            flexSpan
-            span={24}
-            name="searchVal"
-            type="search"
-            onSearch={console.log}
-            shortcutKey
-            filedOptions={{
-              // 开启后将不再表单中出现，也不会做rules校验
-              hidden: true,
-            }}
-          />
-        </Tooltip>
+
+        {/* <Tooltip title="搜索项、搜索项、搜索项"> */}
+        <ColFormSearch
+          placeholder="搜索项、搜索项、搜索项"
+          label="搜索"
+          flexSpan
+          span={24}
+          name="searchVal"
+          type="search"
+          onSearch={console.log}
+          shortcutKey
+          filedOptions={{
+            // 开启后将不再表单中出现，也不会做rules校验
+            hidden: true,
+          }}
+        />
+        {/* </Tooltip> */}
         <ColFormInput
           tip="这里是【用户名】的说明提示"
           filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
