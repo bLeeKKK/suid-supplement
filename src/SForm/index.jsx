@@ -450,6 +450,7 @@ const SForm = forwardRef(
             {({ loading, form, ...props }) => {
               const reset = (
                 <Button
+                  key="_reset"
                   disabled={loading}
                   onClick={() => form.resetFields()}
                   {...(formButtons?.resetButtonProps || {})}
@@ -461,6 +462,7 @@ const SForm = forwardRef(
               const submit = (
                 <Button
                   loading={loading}
+                  key="_submit"
                   type="primary"
                   onClick={() => form.finish()}
                   {...(formButtons?.okButtonProps || {})}
