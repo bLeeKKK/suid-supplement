@@ -46,6 +46,7 @@ export {
   FormTimePicker,
   FormWeekPicker,
   default as SForm,
+  SFormBox,
   useGetForm,
   useWatch,
   withFormColItem,

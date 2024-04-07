@@ -395,7 +395,7 @@ const FormCom = Form.create({
   },
 })(FormBox);
 
-const SFormBox = forwardRef(({ form, ...props }, ref) => {
+export const SFormBox = forwardRef(({ form, ...props }, ref) => {
   if (form) {
     return <FormBox form={form} ref={ref} {...props} />;
   }
@@ -426,7 +426,17 @@ const SFormBox = forwardRef(({ form, ...props }, ref) => {
  *
  * */
 const SForm = forwardRef(
-  ({ basicSpan = 8, rowProps = {}, formButtons, children, ...props }, ref) => {
+  (
+    {
+      basicSpan = 8,
+      rowProps = {},
+      formButtons,
+      positionBtns = 'bottom',
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     // const saveFormRef = React.useRef();
     // useImperativeHandle(ref, () => saveFormRef?.current);
 
@@ -436,54 +446,71 @@ const SForm = forwardRef(
           {children}
         </SRow>
         {formButtons && (
-          <Affix offsetBottom={0}>
-            <div
-              style={{
-                // boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.15)',
-                textAlign: 'right',
-                borderTop: '1px solid #D9D9D9',
-                padding: '8px 16px 8px 16px',
-                background: '#fff',
-              }}
-            >
-              <SFormContext.Consumer>
-                {typeof formButtons === 'function'
-                  ? formButtons
-                  : ({ loading, form }) => {
-                      return (
-                        <SRow basicSpan={basicSpan}>
-                          <SCol span={24}>
-                            <Button
-                              disabled={loading}
-                              style={{ marginRight: 8 }}
-                              onClick={() => form.resetFields()}
-                              {...(formButtons?.resetButtonProps || {})}
-                            >
-                              重置
-                            </Button>
-                            <Button
-                              loading={loading}
-                              type="primary"
-                              onClick={() => form.finish()}
-                              {...(formButtons?.okButtonProps || {})}
-                            >
-                              提交
-                            </Button>
-                          </SCol>
-                        </SRow>
-                      );
+          <SFormContext.Consumer>
+            {({ loading, form, ...props }) => {
+              const reset = (
+                <Button
+                  disabled={loading}
+                  onClick={() => form.resetFields()}
+                  {...(formButtons?.resetButtonProps || {})}
+                >
+                  重置
+                </Button>
+              );
+
+              const submit = (
+                <Button
+                  loading={loading}
+                  type="primary"
+                  onClick={() => form.finish()}
+                  {...(formButtons?.okButtonProps || {})}
+                >
+                  提交
+                </Button>
+              );
+
+              let btns = [reset, submit];
+
+              if (typeof formButtons === 'function') {
+                btns = formButtons({
+                  reset,
+                  submit,
+                  loading,
+                  form,
+                  ...props,
+                });
+              } else if (Array.isArray(formButtons)) {
+                btns = formButtons;
+              }
+
+              return (
+                <Affix offsetBottom={0}>
+                  <div
+                    style={{
+                      // boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.15)',
+                      textAlign: 'right',
+                      borderTop: '1px solid #D9D9D9',
+                      padding: '8px 16px',
+                      background: '#fff',
                     }}
-              </SFormContext.Consumer>
-            </div>
-          </Affix>
+                  >
+                    <SRow basicSpan={basicSpan}>
+                      <SCol span={24} className="space-x-2">
+                        {btns}
+                      </SCol>
+                    </SRow>
+                  </div>
+                </Affix>
+              );
+            }}
+          </SFormContext.Consumer>
         )}
       </SFormBox>
     );
   },
 );
 
-SForm.SFormBox = SFormBox;
-SForm.Provider = SFormContext.Provider;
-SForm.Consumer = SFormContext.Consumer;
+SFormBox.Provider = SFormContext.Provider;
+SFormBox.Consumer = SFormContext.Consumer;
 
 export default SForm;

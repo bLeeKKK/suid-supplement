@@ -19,6 +19,7 @@ import {
   ColFormWeekPicker,
   SCheckbox,
   SForm,
+  SFormBox,
   SRadio,
   SRow,
 } from 'suid-supplement';
@@ -140,6 +141,7 @@ export default () => {
           tip="这里是【用户名】的说明提示"
           filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
           label="用户名"
+          overflowShowTip={false}
           name="user.userName"
           rules={[
             {
@@ -333,13 +335,13 @@ export default () => {
         {/* <ColFormTags label="标签" name="tags" /> */}
 
         <SRow.SCol style={{ marginBottom: '8px' }} span={24}>
-          <SForm.Consumer>
+          <SFormBox.Consumer>
             {({ form, loading }) => (
               <Button onClick={() => form.finish()} loading={loading}>
                 内部自定义按钮(能获取状态)
               </Button>
             )}
-          </SForm.Consumer>
+          </SFormBox.Consumer>
         </SRow.SCol>
       </SForm>
 
