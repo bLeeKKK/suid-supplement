@@ -25,7 +25,7 @@ import styles from './styles.module.less';
 
 const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
   return (
-    <span className="align-middle" title={label}>
+    <span title={label}>
       {label}
       {tip && (
         <>

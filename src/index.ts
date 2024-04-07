@@ -1,5 +1,15 @@
 import 'antd/dist/antd.min.css';
 
+export {
+  SCheckbox,
+  SInput,
+  SInputNumber,
+  SRadio,
+  SSearchPro,
+  SSelect,
+  STags,
+  STextArea,
+} from './Field';
 export { default as OverflowShowbox } from './OverflowShowbox';
 export { ActionBtn, default as BtnsBox } from './SBtnBox';
 export {

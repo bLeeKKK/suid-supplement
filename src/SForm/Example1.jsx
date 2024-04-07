@@ -1,4 +1,4 @@
-import { Button, Checkbox, Switch, Tooltip } from 'antd';
+import { Button, Switch, Tooltip } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import {
@@ -17,7 +17,9 @@ import {
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
+  SCheckbox,
   SForm,
+  SRadio,
   SRow,
 } from 'suid-supplement';
 
@@ -72,7 +74,7 @@ export default () => {
       <SForm
         justShow={checked}
         basicSpan={12}
-        formButtons
+        formButtons={!checked}
         onFinish={(values) => {
           return new Promise((resolve) => {
             setTimeout(() => {
@@ -82,16 +84,15 @@ export default () => {
           });
         }}
         ref={formRef}
-        initialValues={{
-          description: 'zzz',
-          userName1: 'xxx',
-          checkbox: true,
-          user: {
-            userName: '张三',
-            phone: '123',
-          },
-        }}
-        // form={form}
+        // initialValues={{
+        //   description: 'zzz',
+        //   userName1: 'xxx',
+        //   checkbox: true,
+        //   user: {
+        //     userName: '张三',
+        //     phone: '123',
+        //   },
+        // }}
       >
         {addInput && <ColFormInput label="追加Input" name="addInput" />}
         <ColFormTextArea
@@ -99,6 +100,7 @@ export default () => {
           span={24}
           flexSpan
           name="description"
+          initialValue="这是描述"
           rules={[
             {
               required: true,
@@ -158,6 +160,7 @@ export default () => {
         <ColFormInput
           label="电话"
           name="user.phone"
+          initialValue="123"
           // show={(form) => form?.getFieldValue('userName') === '张三'}
           rules={[
             {
@@ -194,11 +197,13 @@ export default () => {
           label="金额"
           name="money"
           type="number"
+          initialValue={100}
         />
         <ColFormSelect
           label="用户类型1"
           name="typeCode1"
           store={() => getDirctData('ocmcUserType')}
+          initialValue="personal_zh-CN"
           rules={[
             {
               required: true,
@@ -258,8 +263,10 @@ export default () => {
           label="复选框(子项)"
           name="checkboxGroup"
         >
-          <Checkbox value="xxx">xxx</Checkbox>
-          <Checkbox value="yyy">yyy</Checkbox>
+          <SCheckbox value="xxx">xxx</SCheckbox>
+          <SCheckbox value="yyy">yyy</SCheckbox>
+          <SCheckbox value="zzz">zzz</SCheckbox>
+          <SCheckbox value="aaa">aaa</SCheckbox>
         </ColFormCheckboxGroup>
         <ColFormCheckboxGroup
           label="复选框(配置)"
@@ -272,9 +279,11 @@ export default () => {
           options={[
             { label: 'Apple', value: 'apple' },
             { label: 'Pear', value: 'pear' },
+            { label: 'Banana', value: 'banana' },
             { label: 'Orange', value: 'orange' },
           ]}
         />
+        <ColFormTimePicker label="时间选择" name="time" />
         <ColFormCheckboxGroup
           label="复选框(配置-请求)"
           name="checkboxGroup4"
@@ -285,16 +294,16 @@ export default () => {
           name="checkboxGroup5"
           store={() => getDirctData('ocmcUserType')}
         >
-          {(arrOptions, Checkbox) => {
+          {(arrOptions) => {
             return (
               <>
                 {arrOptions.map((item) => (
-                  <Checkbox key={item.value} value={item.value}>
+                  <SCheckbox key={item.value} value={item.value}>
                     {item.label}
-                  </Checkbox>
+                  </SCheckbox>
                 ))}
-                <Checkbox value="xxx">xxx</Checkbox>
-                <Checkbox value="yyy">yyy</Checkbox>
+                <SCheckbox value="xxx">xxx</SCheckbox>
+                <SCheckbox value="yyy">yyy</SCheckbox>
               </>
             );
           }}
@@ -303,7 +312,21 @@ export default () => {
           label="复选框(配置-请求)"
           name="radioGroup4"
           store={() => getDirctData('ocmcUserType')}
-        />
+        >
+          {(arrOptions) => {
+            return (
+              <>
+                {arrOptions.map((item) => (
+                  <SRadio key={item.value} value={item.value}>
+                    {item.label}
+                  </SRadio>
+                ))}
+                <SRadio value="xxx">xxx</SRadio>
+                <SRadio value="yyy">yyy</SRadio>
+              </>
+            );
+          }}
+        </ColFormRadioGroup>
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
         {/* <ColFormTags label="标签" name="tags" /> */}
 
