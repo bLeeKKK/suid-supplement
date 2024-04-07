@@ -38,23 +38,23 @@ const getDirctData = async (code, count, filters) => {
   }));
 };
 
-const getUserData = async ({ current, pageSize, filters }, count) => {
-  const { data } = await request(
-    '/api-gateway/ocmc-order/orderUser/findByPage',
-    {
-      method: 'POST',
-      data: {
-        pageInfo: { page: current, rows: pageSize },
-        quickSearchProperties: ['firstName'],
-        quickSearchValue: filters,
-        sortOrders: [],
-      },
-      params: { count },
-    },
-  );
-
-  return { list: data?.rows, total: data?.records };
-};
+// const getUserData = async ({ current, pageSize, filters }, count) => {
+//   const { data } = await request(
+//     '/api-gateway/ocmc-order/orderUser/findByPage',
+//     {
+//       method: 'POST',
+//       data: {
+//         pageInfo: { page: current, rows: pageSize },
+//         quickSearchProperties: ['firstName'],
+//         quickSearchValue: filters,
+//         sortOrders: [],
+//       },
+//       params: { count },
+//     },
+//   );
+//
+//   return { list: data?.rows, total: data?.records };
+// };
 
 export default () => {
   const [addInput, setAddInput] = React.useState(false);
@@ -235,7 +235,7 @@ export default () => {
           }
         </ColFormSelect>
         <ColFormSelect
-          span="16"
+          span={16}
           flexSpan
           mode="multiple"
           label="用户"
@@ -246,7 +246,7 @@ export default () => {
           }}
           // 自定义获取数据
           searchForStore
-          store={(...params) => getUserData(...params, count)}
+          // store={(...params) => getUserData(...params, count)}
           paginated
           storeOption={{
             defaultPageSize: 5,

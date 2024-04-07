@@ -380,13 +380,7 @@ const FormBox = forwardRef(
           ...(passageValue || {}),
         }}
       >
-        {noFormWrap ? (
-          child
-        ) : (
-          <Form form={form} {...props}>
-            {child}
-          </Form>
-        )}
+        {noFormWrap ? child : <Form {...props}>{child}</Form>}
       </SFormContext.Provider>
     );
   },
