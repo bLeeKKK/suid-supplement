@@ -32,7 +32,7 @@ jobs:
           PREVIOUS_VERSION=$(git describe --abbrev=0 --tags | sed 's/^v//')
           # 比较版本号，如果不相等，说明有新版本
           if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
-            echo "::set-output name=new_version::true"
+            echo "::set-output name=new_version::false"
           else
             echo "::set-output name=new_version::false"
           fi
