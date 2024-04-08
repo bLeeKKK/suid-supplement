@@ -23,7 +23,22 @@ jobs:
           # node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Check for new version
+        id: check_version
+        run: |
+          # 获取当前版本号
+          CURRENT_VERSION=$(npm view suid-supplement version)
+          # 获取上一个版本号
+          PREVIOUS_VERSION=$(git describe --abbrev=0 --tags | sed 's/^v//')
+          # 比较版本号，如果不相等，说明有新版本
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "::set-output name=new_version::true"
+          else
+            echo "::set-output name=new_version::false"
+          fi
+
       - name: Build
+        if: steps.check_version.outputs.new_version == 'true'
         run: |
           npm install
           npm run build
