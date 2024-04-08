@@ -37,8 +37,10 @@ jobs:
             echo "::set-output name=new_version::false"
           fi
 
-      - name: Build
+      - name: Print
         run: echo  The tags are ${{ steps.check_version.outputs.new_version }}
+
+      - name: Build
         if: steps.check_version.outputs.new_version == 'true'
         run: |
           npm install
