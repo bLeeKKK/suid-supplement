@@ -27,6 +27,16 @@ jobs:
         run: |
           npm install
           npm run build
-          npm publish
+          npm run docs:build
+
+      - name: Deply npm
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 文档目录，如果是 react 模板需要修改为 docs-dist
+          publish_dir: ./docs-dist
