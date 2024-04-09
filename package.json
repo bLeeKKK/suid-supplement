@@ -1,6 +1,6 @@
 {
   "name": "suid-supplement",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "A react library developed with dumi",
   "license": "MIT",
   "module": "dist/index.js",
