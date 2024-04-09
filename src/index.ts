@@ -11,6 +11,7 @@ export {
   STextArea,
 } from './Field';
 export { default as OverflowShowbox } from './OverflowShowbox';
+export { default as SAddix } from './SAddix';
 export { ActionBtn, default as BtnsBox } from './SBtnBox';
 export {
   ColFormCheckbox,

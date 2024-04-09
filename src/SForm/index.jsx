@@ -1,11 +1,12 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
-import { Affix, Button, Form } from 'antd';
+import { Button, Form } from 'antd';
 import classnames from 'classnames';
 import objectPath from 'object-path';
 import React, {
   createContext,
   forwardRef,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react';
 import SCheckbox from '../Field/SCheckbox';
@@ -19,6 +20,7 @@ import SSwitch from '../Field/SSwitch';
 import STags from '../Field/STags';
 import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
+import SAddix from '../SAddix';
 import { SIcon } from '../SIconBox';
 import SRow from '../SRow';
 import styles from './styles.module.less';
@@ -69,7 +71,8 @@ export const withFormItem = (Component, type) => {
       form,
       disabled,
       justShow,
-      formFieldLayout,
+      labelCol: formLabelCol,
+      wrapperCol: formWrapperCol,
       initialValues,
       itemPropsDefault,
     } = useGetForm() || {
@@ -78,21 +81,35 @@ export const withFormItem = (Component, type) => {
 
     const {
       name,
-      label,
-      tip,
-      tipIcon,
       filedTip,
-      styleItem,
-      className,
       show,
       filedOptions = {},
       fieldLayout,
-      hideMb8px,
       autoScale = 0,
       initialValue,
       rules,
-      renderCondition,
       onChange,
+      renderCondition,
+      tip,
+      tipIcon,
+      hideMb8px,
+      styleFiled,
+
+      // FormItem 的属性
+      className,
+      style,
+      label,
+      colon,
+      extra,
+      hasFeedback,
+      help,
+      htmlFor,
+      labelCol,
+      wrapperCol,
+      labelAlign,
+      required,
+      validateStatus,
+
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
 
@@ -123,20 +140,17 @@ export const withFormItem = (Component, type) => {
       if (!flag) return null;
     }
 
-    const layout = fieldLayout ||
-      formFieldLayout || {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-      };
     if (!form) return null;
 
     const { getFieldDecorator } = form;
 
+    const layoutLabelCol = labelCol || formLabelCol || { span: 8 };
+    const layoutWrapperCol = wrapperCol || formWrapperCol || { span: 16 };
     const hideMb8pxFlag = hideMb8px === undefined ? justShow : hideMb8px;
     const showOwn = typeof show === 'function' ? show(form) : show;
     const showFlag = show !== undefined ? showOwn : justShow;
     const scale =
-      layout.labelCol.span / (layout.wrapperCol.span + layout.labelCol.span);
+      layoutLabelCol.span / (layoutLabelCol.span + layoutWrapperCol.span);
 
     const initVal = initialValues
       ? objectPath.get(initialValues, name)
@@ -153,57 +167,38 @@ export const withFormItem = (Component, type) => {
         form={form}
         onChange={onChange && ((...params) => onChange(...params, form))}
         disabled={disabled}
+        style={styleFiled}
         {...residue}
       />,
     );
 
-    // if (filedTip) {
-    //   const type = getType(filedTip);
-    //
-    //   /**
-    //    * 注：这里有个良性的bug
-    //    * Tooltip 的实现方式是，使用的className来控制显示隐藏 antd-tooltip-open
-    //    * 但是这里使用的是【getFieldDecorator】创建的组件，
-    //    * filed里面没有，或者外部html标签的话，就不能展示
-    //    * */
-    //   if (type === 'string') {
-    //     filed = (
-    //       <Tooltip title={filedTip}>
-    //         <div style={{ display: 'inline-block' }}>{filed}</div>
-    //       </Tooltip>
-    //     );
-    //   } else if (type === 'object') {
-    //     filed = (
-    //       <Tooltip {...filedTip}>
-    //         <div style={{ display: 'inline-block' }}>{filed}</div>
-    //       </Tooltip>
-    //     );
-    //   }
-    // }
-
     return (
       <Form.Item
         label={label && <LabelBox tip={tip} label={label} tipIcon={tipIcon} />}
-        {...layout}
         style={{
           ...(hideMb8pxFlag ? { marginBottom: '0' } : {}),
+          ...(style || {}),
           ...(autoScale ? { display: 'flex' } : {}),
-          ...(styleItem || {}),
         }}
-        // 自动计算占用比例
-        {...(autoScale
-          ? {
-              labelCol: {
-                style: { width: `calc(${autoScale * scale} * 100%)` },
-              },
-              wrapperCol: {
-                style: {
-                  width: `calc(${1 - autoScale * scale} * 100%)`,
-                },
-              },
-            }
-          : {})}
+        labelCol={
+          autoScale
+            ? { style: { width: `calc(${autoScale * scale} * 100%)` } }
+            : layoutLabelCol
+        }
+        wrapperCol={
+          autoScale
+            ? { style: { width: `calc(${1 - autoScale * scale} * 100%)` } }
+            : layoutWrapperCol
+        }
         className={classnames(styles['ss-form-item'], className)}
+        colon={colon}
+        extra={extra}
+        hasFeedback={hasFeedback}
+        help={help}
+        htmlFor={htmlFor}
+        labelAlign={labelAlign}
+        required={required}
+        validateStatus={validateStatus}
       >
         {filed}
       </Form.Item>
@@ -215,9 +210,40 @@ export const withFormItem = (Component, type) => {
 
 // 创建Col包裹的项目
 export const withFormColItem = (Component) => {
-  const App = ({ span, hide, colProps = {}, flexSpan, ...props }) => {
+  const App = ({
+    hide,
+    flexSpan,
+
+    // Col属性
+    offset,
+    order,
+    pull,
+    push,
+    span,
+    xs,
+    sm,
+    md,
+    lg,
+    xl,
+    xxl,
+
+    ...props
+  }) => {
     return (
-      <SCol {...colProps} hide={hide} span={span}>
+      <SCol
+        offset={offset}
+        order={order}
+        pull={pull}
+        push={push}
+        xs={xs}
+        sm={sm}
+        md={md}
+        lg={lg}
+        xl={xl}
+        xxl={xxl}
+        hide={hide}
+        span={span}
+      >
         {({ basicSpan, itemSpan }) => {
           return (
             <Component
@@ -298,7 +324,8 @@ const FormBox = forwardRef(
   (
     {
       form,
-      formFieldLayout,
+      labelCol,
+      wrapperCol,
       justShow,
       initialValues,
       onFinish,
@@ -371,7 +398,8 @@ const FormBox = forwardRef(
       <SFormContext.Provider
         value={{
           form,
-          formFieldLayout,
+          labelCol,
+          wrapperCol,
           justShow,
           initialValues,
           itemPropsDefault,
@@ -416,11 +444,9 @@ export const SFormBox = forwardRef(({ form, ...props }, ref) => {
  * 表单组件
  * @param {object} form 表单对象
  * @param {object} FormItemProps 表单项属性
- * @param {object} rowProps 行属性
  * @param {boolean} justShow 是否只显示
- * @param {object} formFieldLayout 表单布局
  * @param {ReactNode} formButtons 表单按钮
- * @param {object} initialValues 表单初始值 (注意: initialValues的优先级大于表单项目上的initialValue。和formFieldLayout、justShow的规律相反)
+ * @param {object} initialValues 表单初始值 (注意: initialValues的优先级大于表单项目上的initialValue。)
  * @param {object} ref
  * @returns {*}
  *
@@ -428,86 +454,89 @@ export const SFormBox = forwardRef(({ form, ...props }, ref) => {
 const SForm = forwardRef(
   (
     {
-      basicSpan = 8,
-      rowProps = {},
       formButtons,
-      positionBtns = 'bottom',
       children,
+
+      // Row的属性
+      basicSpan = 8,
+      align,
+      gutter,
+      justify,
+      rowType,
+
       ...props
     },
     ref,
   ) => {
-    // const saveFormRef = React.useRef();
-    // useImperativeHandle(ref, () => saveFormRef?.current);
+    const warp = useRef();
 
     return (
-      <SFormBox ref={ref} {...props}>
-        <SRow basicSpan={basicSpan} {...rowProps}>
-          {children}
-        </SRow>
-        {formButtons && (
-          <SFormContext.Consumer>
-            {({ loading, form, ...props }) => {
-              const reset = (
-                <Button
-                  key="_reset"
-                  disabled={loading}
-                  onClick={() => form.resetFields()}
-                  {...(formButtons?.resetButtonProps || {})}
-                >
-                  重置
-                </Button>
-              );
+      <div ref={warp}>
+        <SFormBox ref={ref} {...props}>
+          <SRow
+            basicSpan={basicSpan}
+            align={align}
+            gutter={gutter}
+            justify={justify}
+            type={rowType}
+          >
+            {children}
+          </SRow>
 
-              const submit = (
-                <Button
-                  loading={loading}
-                  key="_submit"
-                  type="primary"
-                  onClick={() => form.finish()}
-                  {...(formButtons?.okButtonProps || {})}
-                >
-                  提交
-                </Button>
-              );
+          {formButtons && (
+            <SFormContext.Consumer>
+              {({ loading, form, ...props }) => {
+                // console.log(form.getFieldsError())
 
-              let btns = [reset, submit];
-
-              if (typeof formButtons === 'function') {
-                btns = formButtons({
-                  reset,
-                  submit,
-                  loading,
-                  form,
-                  ...props,
-                });
-              } else if (Array.isArray(formButtons)) {
-                btns = formButtons;
-              }
-
-              return (
-                <Affix offsetBottom={0}>
-                  <div
-                    style={{
-                      // boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.15)',
-                      textAlign: 'right',
-                      borderTop: '1px solid #D9D9D9',
-                      padding: '8px 16px',
-                      background: '#fff',
-                    }}
+                const reset = (
+                  <Button
+                    key="_reset"
+                    disabled={loading}
+                    onClick={() => form.resetFields()}
+                    {...(formButtons?.resetButtonProps || {})}
                   >
-                    <SRow basicSpan={basicSpan}>
-                      <SCol span={24} className="space-x-2">
-                        {btns}
-                      </SCol>
-                    </SRow>
-                  </div>
-                </Affix>
-              );
-            }}
-          </SFormContext.Consumer>
-        )}
-      </SFormBox>
+                    重置
+                  </Button>
+                );
+
+                const submit = (
+                  <Button
+                    loading={loading}
+                    key="_submit"
+                    type="primary"
+                    onClick={() => form.finish()}
+                    {...(formButtons?.okButtonProps || {})}
+                  >
+                    提交
+                  </Button>
+                );
+
+                let btns = [reset, submit];
+
+                if (typeof formButtons === 'function') {
+                  btns = formButtons({
+                    reset,
+                    submit,
+                    loading,
+                    form,
+                    ...props,
+                  });
+                } else if (Array.isArray(formButtons)) {
+                  btns = formButtons;
+                }
+
+                return (
+                  <SAddix scope={warp} offsetBottom={0}>
+                    <div className="mb-4 text-right py-2 px-4 space-x-2 bg-white border-x-0 border-b-0 border-solid border-gray-300">
+                      {btns}
+                    </div>
+                  </SAddix>
+                );
+              }}
+            </SFormContext.Consumer>
+          )}
+        </SFormBox>
+      </div>
     );
   },
 );

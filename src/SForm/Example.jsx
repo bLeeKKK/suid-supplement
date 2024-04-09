@@ -1,5 +1,4 @@
 import { Button, Switch } from 'antd';
-import axios from 'axios';
 import React from 'react';
 import {
   ActionBtn,
@@ -9,20 +8,20 @@ import {
   SRow,
 } from 'suid-supplement';
 
-const getDirctData = async (code, count, filters) => {
-  const { data } = await axios.get(`/api/dict`, {
-    params: {
-      dictCode: code,
-      count,
-      filters,
-    },
-  });
-
-  return data.data.map((item) => ({
-    value: item.dataValue,
-    label: item.dataName,
-  }));
-};
+// const getDirctData = async (code, count, filters) => {
+//   const { data } = await axios.get(`/api/dict`, {
+//     params: {
+//       dictCode: code,
+//       count,
+//       filters,
+//     },
+//   });
+//
+//   return data.data.map((item) => ({
+//     value: item.dataValue,
+//     label: item.dataName,
+//   }));
+// };
 
 export default () => {
   const [checked, setChecked] = React.useState(false);
@@ -42,7 +41,6 @@ export default () => {
             width: '500px',
           }}
           justShow={checked}
-          formButtons={!checked}
           onFinish={(values) => {
             return new Promise((resolve) => {
               setTimeout(() => {
@@ -55,8 +53,6 @@ export default () => {
         >
           <FormTextArea
             label="描述"
-            span={24}
-            flexSpan
             name="des"
             initialValue="这是描述"
             rules={[
