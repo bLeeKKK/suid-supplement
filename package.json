@@ -1,7 +1,11 @@
 {
   "name": "suid-supplement",
   "version": "0.1.20",
-  "description": "A react library developed with dumi",
+  "description": "一个基于dumi开发的，antd3的扩展仓库",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bLeeKKK/suid-supplement"
+  },
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
