@@ -1,6 +1,8 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
+  base: '/suid-supplement/',
+  publicPath: '/suid-supplement/',
   // 通过<API></API>组件自动生成文档表格
   apiParser: {},
   resolve: {

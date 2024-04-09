@@ -2,6 +2,7 @@
   "name": "suid-supplement",
   "version": "0.1.20",
   "description": "一个基于dumi开发的，antd3的扩展仓库",
+  "homepage": "https://bleekkk.github.io/suid-supplement",
   "repository": {
     "type": "git",
     "url": "https://github.com/bLeeKKK/suid-supplement"
@@ -15,6 +16,7 @@
   "scripts": {
     "build": "father build",
     "build:watch": "father dev",
+    "deploy": "gh-pages -d docs-dist",
     "dev": "dumi dev",
     "docs:build": "dumi build",
     "doctor": "father doctor",
@@ -70,6 +72,7 @@
     "dumi": "^2.2.13",
     "eslint": "^8.23.0",
     "father": "^4.1.0",
+    "gh-pages": "^6.1.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "mockjs": "^1.1.0",
