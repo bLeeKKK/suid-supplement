@@ -120,7 +120,6 @@ export default () => {
           ]}
           initialValue="李四"
         />
-
         {/* <Tooltip title="搜索项、搜索项、搜索项"> */}
         <ColFormSearch
           placeholder="搜索项、搜索项、搜索项"
@@ -176,13 +175,8 @@ export default () => {
         <ColFormInput
           label="电话隐藏"
           name="phoneHide"
-          hide
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: '请输入电话隐藏',
-          //   },
-          // ]}
+          // 这里是隐藏的属于 display: none 的样式
+          span={0}
         />
         <ColFormInput
           label="地址选择"
@@ -239,9 +233,11 @@ export default () => {
         <ColFormSelect
           span={16}
           flexSpan
+          // wrapperCol={{ span: 12 }}
           mode="multiple"
           label="用户"
           name="typeCode3"
+          extra="这里是额外说明"
           reader={{
             value: 'id',
             label: 'firstName',
@@ -333,7 +329,6 @@ export default () => {
         </ColFormRadioGroup>
         <ColFormSwitch label="复选框(配置-请求)" name="switch4" />
         {/* <ColFormTags label="标签" name="tags" /> */}
-
         <SRow.SCol style={{ marginBottom: '8px' }} span={24}>
           <SFormBox.Consumer>
             {({ form, loading }) => (

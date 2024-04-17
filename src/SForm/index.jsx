@@ -22,7 +22,7 @@ import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
 import SAddix from '../SAddix';
 import { SIcon } from '../SIconBox';
-import SRow from '../SRow';
+import SRow, { withFormColItem } from '../SRow';
 import styles from './styles.module.less';
 
 const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
@@ -182,12 +182,28 @@ export const withFormItem = (Component, type) => {
         }}
         labelCol={
           autoScale
-            ? { style: { width: `calc(${autoScale * scale} * 100%)` } }
+            ? {
+                style: {
+                  width: `calc(${
+                    (autoScale *
+                      scale *
+                      (layoutLabelCol.span + layoutWrapperCol.span)) /
+                    24
+                  } * 100%)`,
+                },
+              }
             : layoutLabelCol
         }
         wrapperCol={
           autoScale
-            ? { style: { width: `calc(${1 - autoScale * scale} * 100%)` } }
+            ? {
+                style: {
+                  width: `calc(${
+                    (layoutLabelCol.span + layoutWrapperCol.span) / 24 -
+                    autoScale * scale
+                  } * 100%)`,
+                },
+              }
             : layoutWrapperCol
         }
         className={classnames(styles['ss-form-item'], className)}
@@ -202,57 +218,6 @@ export const withFormItem = (Component, type) => {
       >
         {filed}
       </Form.Item>
-    );
-  };
-
-  return App;
-};
-
-// 创建Col包裹的项目
-export const withFormColItem = (Component) => {
-  const App = ({
-    hide,
-    flexSpan,
-
-    // Col属性
-    offset,
-    order,
-    pull,
-    push,
-    span,
-    xs,
-    sm,
-    md,
-    lg,
-    xl,
-    xxl,
-
-    ...props
-  }) => {
-    return (
-      <SCol
-        offset={offset}
-        order={order}
-        pull={pull}
-        push={push}
-        xs={xs}
-        sm={sm}
-        md={md}
-        lg={lg}
-        xl={xl}
-        xxl={xxl}
-        hide={hide}
-        span={span}
-      >
-        {({ basicSpan, itemSpan }) => {
-          return (
-            <Component
-              autoScale={flexSpan ? basicSpan / itemSpan : flexSpan} // 自动计算占用比例
-              {...props}
-            />
-          );
-        }}
-      </SCol>
     );
   };
 
@@ -326,20 +291,21 @@ const FormBox = forwardRef(
       form,
       labelCol,
       wrapperCol,
-      justShow,
+      justShow = false,
       initialValues,
       onFinish,
+      loading,
       itemPropsDefault,
       children,
       // 不需要Form包裹
       noFormWrap = false,
-      passageValue,
       disabled,
       ...props
     },
     ref,
   ) => {
-    const [loading, setLoading] = useState(false);
+    const [inLoading, setInLoading] = useState(false);
+    const load = loading || inLoading;
     useImperativeHandle(ref, () => form);
 
     const finish = useMemoizedFn(
@@ -377,9 +343,9 @@ const FormBox = forwardRef(
         if (onFinish) {
           const result = onFinish(values, types);
           if (result?.finally) {
-            setLoading(true);
+            setInLoading(true);
             result.finally((res) => {
-              setLoading(false);
+              setInLoading(false);
               return res;
             });
           }
@@ -403,9 +369,8 @@ const FormBox = forwardRef(
           justShow,
           initialValues,
           itemPropsDefault,
-          disabled: disabled ?? loading,
-          loading,
-          ...(passageValue || {}),
+          disabled: disabled ?? load,
+          loading: load,
         }}
       >
         {noFormWrap ? child : <Form {...props}>{child}</Form>}
@@ -457,7 +422,7 @@ const SForm = forwardRef(
       formButtons,
       children,
 
-      // Row的属性
+      // SRow的属性
       basicSpan = 8,
       align,
       gutter,
