@@ -38,7 +38,7 @@ const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
     </span>
   );
 };
-const SCol = SRow.SCol;
+// const SCol = SRow.SCol;
 
 // Context
 export const SFormContext = createContext();
