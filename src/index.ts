@@ -63,4 +63,4 @@ export { default as SModal, createModalMount, useModalMount } from './SModal';
 export { default as SRow, withFormColItem } from './SRow';
 export { default as STable } from './STable';
 export { default as Upload } from './Upload';
-export { useChannel } from './utils';
+export { useChannel } from './utils/channel';
