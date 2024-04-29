@@ -28,8 +28,6 @@
 
 <code src='./Example1'></code>
 
-## API
-
 ### SForm
 
 更多参考 [antd3.Form](https://3x.ant.design/components/form-cn/)

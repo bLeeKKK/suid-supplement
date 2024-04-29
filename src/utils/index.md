@@ -1,6 +1,16 @@
-# channel 跨页面通讯
+# utils 使用工具
 
-### useChannel
+<!-- ### utils -->
+<!---->
+<!-- 一些实用工具函数、hook -->
+
+<!-- # channel 跨页面通讯 -->
+
+## useChannel 跨页面通讯
+
+<code src='./channel/example'></code>
+
+<code src='./channel/example1'></code>
 
 #### Params
 
