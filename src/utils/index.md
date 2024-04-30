@@ -8,6 +8,8 @@
 
 ## useChannel 跨页面通讯
 
+打开控制台查看
+
 <code src='./channel/example'></code>
 
 <code src='./channel/example1'></code>

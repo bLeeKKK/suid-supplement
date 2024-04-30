@@ -28,6 +28,8 @@ export const useChannel = (channelName, onMessage) => {
   }, []);
 
   useEffect(() => {
+    if (channelName === undefined || channelName === null) return;
+
     const channel = new BroadcastChannel(channelName);
     // 频道的id
     channel.id = createId(channelName);
