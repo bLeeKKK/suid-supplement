@@ -25,7 +25,7 @@ export default () => {
         }}
       >
         <SFormBox.Consumer>
-          {({ loading }: any) => (
+          {({ loading, form }: any) => (
             <SModal
               visible={visible}
               title="表单"
@@ -39,7 +39,7 @@ export default () => {
                       // tip: '点击后重置表单',
                       disabled: loading,
                       onClick: () => {
-                        return formRef.current?.resetFields();
+                        return form.resetFields();
                       },
                     },
                     {
@@ -48,7 +48,7 @@ export default () => {
                       type: 'primary',
                       // icon: 'file-search',
                       onClick: () => {
-                        return formRef.current?.finish();
+                        return form.finish();
                       },
                     },
                   ]}

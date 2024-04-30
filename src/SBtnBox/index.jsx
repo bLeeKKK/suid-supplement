@@ -44,7 +44,7 @@ export const ActionBtn = (props) => {
     (...args) => {
       if (!onClick) return;
       const r = onClick(...args);
-      console.log(r, 'r');
+      // console.log(r, 'r');
       if (r && r.finally) {
         setInLoading(true);
         r.finally(() => {
