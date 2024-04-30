@@ -4,7 +4,7 @@ import { SModal, createModalMount, useModalMount } from 'suid-supplement';
 // import ReactDOM from 'react-dom';
 
 const FormModal = ({ visible, setVisible, afterClose, ...props }: any) => {
-  // console.log(ReactDOM.createPortal)
+  console.log(visible);
   return (
     <SModal
       visible={visible}
@@ -53,7 +53,7 @@ export default () => {
   return (
     <div>
       <Button onClick={() => console.log(ref, ref2)} className="mr-2">
-        xxx
+        查看控制台
       </Button>
 
       <MyModal />

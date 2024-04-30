@@ -71,11 +71,15 @@ export const createModalMount = (Component) => {
       document.body.removeChild(container);
     };
 
-    const p = new Promise((resolve) => {
-      ReactDOM.render(
-        <App {...props} _clear={clear} ref={(r) => resolve(r)} />,
-        container,
-      );
+    const p = new Promise((resolve, reject) => {
+      try {
+        ReactDOM.render(
+          <App {...props} _clear={clear} ref={(r) => resolve(r)} />,
+          container,
+        );
+      } catch (err) {
+        reject(err);
+      }
     });
 
     return p;
