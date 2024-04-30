@@ -167,7 +167,10 @@ export const withFormItem = (Component, type) => {
         form={form}
         onChange={onChange && ((...params) => onChange(...params, form))}
         disabled={disabled}
-        style={styleFiled}
+        style={{
+          width: '100%',
+          ...(styleFiled || {}),
+        }}
         {...residue}
       />,
     );
