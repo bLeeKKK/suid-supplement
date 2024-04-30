@@ -492,7 +492,7 @@ const SForm = forwardRef(
 
                 return (
                   <SAddix scope={warp} offsetBottom={0}>
-                    <div className="mb-4 text-right py-2 px-4 space-x-2 bg-white border-x-0 border-b-0 border-solid border-gray-300">
+                    <div className="text-right py-2 px-4 space-x-2 bg-white border-x-0 border-b-0 border-solid border-gray-300">
                       {btns}
                     </div>
                   </SAddix>
