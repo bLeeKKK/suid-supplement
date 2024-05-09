@@ -41,6 +41,7 @@ const createWrapperApp = (Component, { autoClear = true } = {}) => {
     const [visible, setVisible] = useState(false);
 
     useImperativeHandle(ref, () => ({
+      clear,
       visible,
       setVisible,
     }));
@@ -54,7 +55,14 @@ const createWrapperApp = (Component, { autoClear = true } = {}) => {
       }
     }, [visible, clear]);
 
-    return <Component {...props} visible={visible} setVisible={setVisible} />;
+    return (
+      <Component
+        {...props}
+        visible={visible}
+        setVisible={setVisible}
+        clear={clear}
+      />
+    );
   });
 
   return App;
