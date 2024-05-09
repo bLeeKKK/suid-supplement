@@ -148,24 +148,17 @@ export const useModalMount = (Component, { renderSave = true } = {}) => {
   return [show, modelRef];
 };
 
-export const useModalMountGetComponent = (Component) => {
-  const modelRef = useRef();
-  const App = useMemo(
-    () => createWrapperApp(Component, { autoClear: false }),
-    [Component],
+export const useModalMountGetComponent = (Component, props = {}) => {
+  const [visible, setVisible] = useState(false);
+  const app = (
+    <Component visible={visible} setVisible={setVisible} {...props} />
   );
 
-  const MountPortal = useCallback(({ ...props }) => {
-    return <App {...props} ref={modelRef} />;
-  });
-
   const show = useCallback(() => {
-    if (modelRef.current && modelRef.current.setVisible) {
-      modelRef.current.setVisible(true);
-    }
-  }, []);
+    setVisible(true);
+  }, [setVisible]);
 
-  return [MountPortal, show, modelRef];
+  return [app, show];
 };
 
 export default SModal;
