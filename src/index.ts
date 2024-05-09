@@ -59,7 +59,12 @@ export {
   SIcon,
   useIconContext,
 } from './SIconBox';
-export { default as SModal, createModalMount, useModalMount } from './SModal';
+export {
+  default as SModal,
+  createModalMount,
+  useModalMount,
+  useModalMountGetComponent,
+} from './SModal';
 export { default as SRow, withFormColItem } from './SRow';
 export { default as STable } from './STable';
 export { default as Upload } from './Upload';

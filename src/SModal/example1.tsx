@@ -1,6 +1,11 @@
 import { Button, Input } from 'antd';
 import React from 'react';
-import { SModal, createModalMount, useModalMount } from 'suid-supplement';
+import {
+  SModal,
+  createModalMount,
+  useModalMount,
+  useModalMountGetComponent,
+} from 'suid-supplement';
 // import ReactDOM from 'react-dom';
 
 const FormModal = ({ visible, setVisible, afterClose, ...props }: any) => {
@@ -45,10 +50,7 @@ const { show } = createModalMount(FormModal);
 
 export default () => {
   const [show1, ref] = useModalMount(FormModal, { renderSave: true });
-  const [show2, ref2, MyModal] = useModalMount(FormModal, {
-    // 开启manualOperation后renderSave将失效，因为你可以自己处理模态框放到哪里了。
-    manualOperation: true,
-  });
+  const [show2, ref2, MyModal] = useModalMountGetComponent(FormModal);
 
   return (
     <div>

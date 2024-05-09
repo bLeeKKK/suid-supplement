@@ -94,17 +94,11 @@ export const createModalMount = (Component) => {
   return { show };
 };
 
-export const useModalMount = (
-  Component,
-  { renderSave = true, manualOperation = false } = {},
-) => {
+export const useModalMount = (Component, { renderSave = true } = {}) => {
   const modelRef = useRef();
   const App = useMemo(
-    () =>
-      manualOperation
-        ? createWrapperApp(Component, { autoClear: false })
-        : createWrapperApp(Component, { autoClear: !renderSave }),
-    [Component, renderSave, manualOperation],
+    () => createWrapperApp(Component, { autoClear: !renderSave }),
+    [Component, renderSave],
   );
 
   const mount = useCallback(async (props = {}) => {
@@ -126,10 +120,6 @@ export const useModalMount = (
     return p;
   }, []);
 
-  const MountPortal = useCallback(({ ...props }) => {
-    return <App {...props} ref={modelRef} />;
-  });
-
   const show = useCallback(
     async (props = {}) => {
       if (renderSave) {
@@ -147,16 +137,26 @@ export const useModalMount = (
     [mount, renderSave],
   );
 
+  return [show, modelRef];
+};
+
+export const useModalMountGetComponent = (Component) => {
+  const modelRef = useRef();
+  const App = useMemo(
+    () => createWrapperApp(Component, { autoClear: false }),
+    [Component],
+  );
+
+  const MountPortal = useCallback(({ ...props }) => {
+    return <App {...props} ref={modelRef} />;
+  });
+
   const showPortal = useCallback(() => {
     if (modelRef.current && modelRef.current.setVisible)
       modelRef.current.setVisible(true);
   }, []);
 
-  return [
-    manualOperation ? showPortal : show,
-    modelRef,
-    manualOperation ? MountPortal : undefined,
-  ];
+  return [showPortal, modelRef, MountPortal];
 };
 
 export default SModal;
