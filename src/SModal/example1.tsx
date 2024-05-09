@@ -33,7 +33,10 @@ const FormModal = ({
       }}
       {...props}
     >
-      <Button onClick={() => setData({ name: 888 })}>切换状态</Button>
+      <Button onClick={() => setData && setData({ name: 888 })}>
+        切换状态
+      </Button>
+      {JSON.stringify(data ? data : {})}
       <SForm initialValues={data}>
         <ColFormInput name="name" />
       </SForm>
@@ -44,22 +47,22 @@ const FormModal = ({
 const { show } = createModalMount(FormModal);
 
 export default () => {
+  const [show1, ref] = useModalMount(FormModal, {
+    renderSave: true,
+  });
   const [data, setData] = useState({
     name: 999,
   });
-  const [show1, ref] = useModalMount(FormModal, {
-    renderSave: true,
-    data,
-    setData,
-  });
-  const [app, show2, ref2] = useModalMountGetComponent(FormModal, {
+
+  // 废弃，尽量不要使用。可以直接定义组件使用
+  const [app, { show: show2 }] = useModalMountGetComponent(FormModal, {
     data,
     setData,
   });
 
   return (
     <div>
-      <Button onClick={() => console.log(ref, ref2)} className="mr-2">
+      <Button onClick={() => console.log(ref)} className="mr-2">
         查看控制台
       </Button>
 

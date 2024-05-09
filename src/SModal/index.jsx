@@ -94,9 +94,9 @@ export const createModalMount = (Component) => {
   };
 
   const show = async (props = {}) => {
-    const modelRef = await mount(props);
-    modelRef.setVisible(true);
-    return modelRef;
+    const model = await mount(props);
+    model.setVisible(true);
+    return model;
   };
 
   return { show };
@@ -148,17 +148,24 @@ export const useModalMount = (Component, { renderSave = true } = {}) => {
   return [show, modelRef];
 };
 
+/**
+ * @description 废弃，尽量不要使用
+ */
 export const useModalMountGetComponent = (Component, props = {}) => {
   const [visible, setVisible] = useState(false);
   const app = (
     <Component visible={visible} setVisible={setVisible} {...props} />
   );
 
-  const show = useCallback(() => {
-    setVisible(true);
-  }, [setVisible]);
-
-  return [app, show];
+  return [
+    app,
+    {
+      show: () => setVisible(true),
+      close: () => setVisible(false),
+      visible,
+      setVisible,
+    },
+  ];
 };
 
 export default SModal;
