@@ -154,18 +154,13 @@ export const useModalMountGetComponent = (Component) => {
     () => createWrapperApp(Component, { autoClear: false }),
     [Component],
   );
-
-  const MountPortal = useCallback(({ ...props }) => {
-    return <App {...props} ref={modelRef} />;
-  });
-
   const show = useCallback(() => {
     if (modelRef.current && modelRef.current.setVisible) {
       modelRef.current.setVisible(true);
     }
   }, []);
 
-  return [MountPortal, show, modelRef];
+  return [App, show, modelRef];
 };
 
 export default SModal;
