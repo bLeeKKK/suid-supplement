@@ -159,12 +159,13 @@ export const useModalMountGetComponent = (Component) => {
     return <App {...props} ref={modelRef} />;
   });
 
-  const showPortal = useCallback(() => {
-    if (modelRef.current && modelRef.current.setVisible)
+  const show = useCallback(() => {
+    if (modelRef.current && modelRef.current.setVisible) {
       modelRef.current.setVisible(true);
+    }
   }, []);
 
-  return [showPortal, modelRef, MountPortal];
+  return [MountPortal, show, modelRef];
 };
 
 export default SModal;

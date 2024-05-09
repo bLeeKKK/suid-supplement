@@ -50,7 +50,7 @@ const { show } = createModalMount(FormModal);
 
 export default () => {
   const [show1, ref] = useModalMount(FormModal, { renderSave: true });
-  const [show2, ref2, MyModal] = useModalMountGetComponent(FormModal);
+  const [MyModal, show2, ref2] = useModalMountGetComponent(FormModal);
 
   return (
     <div>
