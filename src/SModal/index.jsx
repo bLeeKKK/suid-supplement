@@ -1,3 +1,4 @@
+import { useControllableValue } from 'ahooks';
 import { Modal } from 'antd';
 import React, {
   forwardRef,
@@ -35,10 +36,21 @@ const SModal = ({ children, okButtonProps, onOk, ...props }) => {
   );
 };
 
+export const useControlVisible = (props = {}) => {
+  const [visible, setVisible] = useControllableValue(props, {
+    defaultValue: false,
+    defaultValuePropName: 'defaultVisible',
+    valuePropName: 'visible',
+    trigger: 'setVisible',
+  });
+
+  return [visible, setVisible];
+};
+
 const createWrapperApp = (Component, { autoClear = true } = {}) => {
   const App = forwardRef(({ _clear: clear, ...props }, ref) => {
     const timer = useRef();
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useControlVisible(props);
 
     useImperativeHandle(ref, () => ({
       clear,
@@ -149,10 +161,10 @@ export const useModalMount = (Component, { renderSave = true } = {}) => {
 };
 
 /**
- * @description 废弃，尽量不要使用
+ * @description 废弃，可以直接使用组件放到页面中
  */
 export const useModalMountGetComponent = (Component, props = {}) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useControlVisible(props);
   const app = (
     <Component visible={visible} setVisible={setVisible} {...props} />
   );

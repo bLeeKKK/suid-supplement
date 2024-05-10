@@ -66,17 +66,17 @@ export default () => {
         查看控制台
       </Button>
 
-      {app}
-      <Button onClick={show2} className="mr-2">
-        命令弹框(hook-手动挂载-享受React上下文)
-      </Button>
-
       <Button onClick={() => show1({ setData, data })} className="mr-2">
         命令弹框(hook)
       </Button>
 
       <Button onClick={show} className="mr-2">
         命令弹框(传入Modal组件)
+      </Button>
+
+      {app}
+      <Button onClick={show2} className="mr-2">
+        命令弹框hook-手动挂载-享受React上下文 (注：不推荐使用)
       </Button>
     </div>
   );
