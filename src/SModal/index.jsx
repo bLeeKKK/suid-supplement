@@ -47,7 +47,7 @@ export const useControlVisible = (props = {}) => {
   return [visible, setVisible];
 };
 
-const createWrapperApp = (Component, { autoClear = true } = {}) => {
+const withModalApp = (Component, { autoClear = true } = {}) => {
   const App = forwardRef(({ _clear: clear, ...props }, ref) => {
     const timer = useRef();
     const [visible, setVisible] = useControlVisible(props);
@@ -81,7 +81,7 @@ const createWrapperApp = (Component, { autoClear = true } = {}) => {
 };
 
 export const createModalMount = (Component) => {
-  const App = createWrapperApp(Component);
+  const App = withModalApp(Component);
 
   const mount = async ({ ...props }) => {
     const container = document.createElement('div');
@@ -117,7 +117,7 @@ export const createModalMount = (Component) => {
 export const useModalMount = (Component, { renderSave = true } = {}) => {
   const modelRef = useRef();
   const App = useMemo(
-    () => createWrapperApp(Component, { autoClear: !renderSave }),
+    () => withModalApp(Component, { autoClear: !renderSave }),
     [Component, renderSave],
   );
 
@@ -158,6 +158,20 @@ export const useModalMount = (Component, { renderSave = true } = {}) => {
   );
 
   return [show, modelRef];
+};
+
+export const withModalControls = (Component) => {
+  return ({ triggerRender, ...props }) => {
+    const [visible, setVisible] = useControlVisible(props);
+
+    return (
+      <>
+        {typeof triggerRender === 'function' &&
+          triggerRender({ visible, setVisible }, props)}
+        <Component {...props} visible={visible} setVisible={setVisible} />
+      </>
+    );
+  };
 };
 
 /**
