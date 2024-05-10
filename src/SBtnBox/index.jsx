@@ -137,7 +137,7 @@ export const BtnsBox = ({ btnArr = [], limt, moreBtn = BtnMore }) => {
     <div className="s-btn-box">
       {beforArr.map(({ title, ...res }) => {
         return (
-          <span key={`map-${res.type}`}>
+          <span key={`map-${title}`}>
             <ActionBtn {...res}>{title}</ActionBtn>
           </span>
         );
@@ -148,7 +148,7 @@ export const BtnsBox = ({ btnArr = [], limt, moreBtn = BtnMore }) => {
           overlay={
             <Menu>
               {arr.map((res) => (
-                <Menu.Item disabled={res.disabled} key={`list-${res.type}`}>
+                <Menu.Item disabled={res.disabled} key={`list-${res.title}`}>
                   <ActionMenu res={res} />
                 </Menu.Item>
               ))}
