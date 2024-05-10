@@ -1,6 +1,8 @@
-import { Button, Input } from 'antd';
-import React from 'react';
+import { Button } from 'antd';
+import React, { useState } from 'react';
 import {
+  ColFormInput,
+  SForm,
   SModal,
   createModalMount,
   useModalMount,
@@ -8,8 +10,14 @@ import {
 } from 'suid-supplement';
 // import ReactDOM from 'react-dom';
 
-const FormModal = ({ visible, setVisible, afterClose, ...props }: any) => {
-  console.log(visible);
+const FormModal = ({
+  visible,
+  data,
+  setData,
+  setVisible,
+  afterClose,
+  ...props
+}: any) => {
   return (
     <SModal
       visible={visible}
@@ -25,45 +33,45 @@ const FormModal = ({ visible, setVisible, afterClose, ...props }: any) => {
       }}
       {...props}
     >
-      <Input />
+      <Button onClick={() => setData && setData({ name: 888 })}>
+        切换状态
+      </Button>
+      {JSON.stringify(data ? data : {})}
+      <SForm initialValues={data}>
+        <ColFormInput name="name" />
+      </SForm>
     </SModal>
   );
 };
 
-// const Content = () => {
-//   return <div>这是一个命令弹框2</div>;
-// };
-
 const { show } = createModalMount(FormModal);
-// const { show: show1 } = createModalMount({
-//   title: '命令弹框',
-//   // 如果传入的不是组件，可以考虑使用Modal.confirm
-//   Content: Content,
-//   onOk: () => {
-//     const p = new Promise((r) => {
-//       setTimeout(r, 2000);
-//     });
-//     return p;
-//   },
-//   extendProps: console.log,
-// });
 
 export default () => {
-  const [show1, ref] = useModalMount(FormModal, { renderSave: true });
-  const [MyModal, show2, ref2] = useModalMountGetComponent(FormModal);
+  const [show1, ref] = useModalMount(FormModal, {
+    renderSave: true,
+  });
+  const [data, setData] = useState({
+    name: 999,
+  });
+
+  // 废弃，尽量不要使用。可以直接定义组件使用
+  const [app, { show: show2 }] = useModalMountGetComponent(FormModal, {
+    data,
+    setData,
+  });
 
   return (
     <div>
-      <Button onClick={() => console.log(ref, ref2)} className="mr-2">
+      <Button onClick={() => console.log(ref)} className="mr-2">
         查看控制台
       </Button>
 
-      <MyModal />
+      {app}
       <Button onClick={show2} className="mr-2">
         命令弹框(hook-手动挂载-享受React上下文)
       </Button>
 
-      <Button onClick={show1} className="mr-2">
+      <Button onClick={() => show1({ setData, data })} className="mr-2">
         命令弹框(hook)
       </Button>
 
