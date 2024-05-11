@@ -1,8 +1,10 @@
 import { Button, Switch } from 'antd';
+import moment from 'moment';
 import React from 'react';
 import {
   ActionBtn,
   FormInput,
+  FormRangePicker,
   FormTextArea,
   SFormBox,
   SRow,
@@ -76,7 +78,7 @@ export default () => {
 
           <FormInput
             label="年龄"
-            name="ages"
+            name="age"
             rules={[
               {
                 required: true,
@@ -84,6 +86,23 @@ export default () => {
               },
             ]}
             initialValue={18}
+            transform={(value) => {
+              return `${value}岁`;
+            }}
+          />
+
+          <FormRangePicker
+            label="日期"
+            name="range"
+            convertInitValue={(_) => {
+              return [moment('2000-1-1'), moment('2000-1-2')];
+            }}
+            transform={(value) => {
+              return {
+                startTime: value?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
+                endTime: value?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
+              };
+            }}
           />
 
           <SRow type="flex" justify="center">
@@ -92,7 +111,9 @@ export default () => {
                 {({ form, loading }) => (
                   <Button
                     type="primary"
-                    onClick={() => form.finish()}
+                    onClick={() => {
+                      form.finish();
+                    }}
                     loading={loading}
                   >
                     内部按钮

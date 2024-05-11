@@ -1,11 +1,14 @@
 import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
 import { Button, Form } from 'antd';
 import classnames from 'classnames';
+import deepMerge from 'deepmerge';
 import objectPath from 'object-path';
 import React, {
   createContext,
   forwardRef,
+  useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -23,7 +26,223 @@ import STimePicker from '../Field/STimePicker';
 import SAddix from '../SAddix';
 import { SIcon } from '../SIconBox';
 import SRow, { withFormColItem } from '../SRow';
+import { isNil } from '../utils/isNil';
 import styles from './styles.module.less';
+
+const merge = (...rest) => {
+  const obj = {};
+  const il = rest.length;
+  let key;
+  let i = 0;
+  for (; i < il; i += 1) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (key in rest[i]) {
+      if (rest[i].hasOwnProperty(key)) {
+        if (
+          typeof obj[key] === 'object' &&
+          typeof rest[i][key] === 'object' &&
+          obj[key] !== undefined &&
+          obj[key] !== null &&
+          !Array.isArray(obj[key]) &&
+          !Array.isArray(rest[i][key])
+        ) {
+          obj[key] = {
+            ...obj[key],
+            ...rest[i][key],
+          };
+        } else {
+          obj[key] = rest[i][key];
+        }
+      }
+    }
+  }
+  return obj;
+};
+
+/**
+ * 暂时还不支持 Set和 Map 结构 判断是不是一个能遍历的对象
+ *
+ * @param itemValue
+ * @returns Boolean
+ */
+export function isPlainObj(itemValue) {
+  if (typeof itemValue !== 'object') return false;
+
+  /** Null 也要处理，不然omit空会失效 */
+  if (itemValue === null) return true;
+
+  if (React.isValidElement(itemValue)) return false;
+  if (itemValue.constructor === RegExp) return false;
+  if (itemValue instanceof Map) return false;
+  if (itemValue instanceof Set) return false;
+  if (itemValue instanceof HTMLElement) return false;
+  if (itemValue instanceof Blob) return false;
+  if (itemValue instanceof File) return false;
+  if (Array.isArray(itemValue)) return false;
+  return true;
+}
+
+const transformKeySubmitValue = (values, dataFormatMapRaw, omit = true) => {
+  // ignore nil transform
+  const dataFormatMap = Object.keys(dataFormatMapRaw).reduce((ret, key) => {
+    const value = dataFormatMapRaw[key];
+    if (!isNil(value)) {
+      // eslint-disable-next-line no-param-reassign
+      ret[key] = value;
+    }
+    return ret;
+  }, {});
+
+  if (Object.keys(dataFormatMap).length < 1) {
+    return values;
+  }
+
+  if (typeof window === 'undefined') return values;
+
+  // 如果 value 是 string | null | Array | Blob类型 其中之一，直接返回
+  // 形如 {key: [File, File]} 的表单字段当进行第二次递归时会导致其直接越过 typeof value !== 'object' 这一判断 https://github.com/ant-design/pro-components/issues/2071
+  if (typeof values !== 'object' || isNil(values) || values instanceof Blob) {
+    return values;
+  }
+
+  let finalValues = Array.isArray(values) ? [] : {};
+
+  const gen = (tempValues, parentsKey) => {
+    const isArrayValues = Array.isArray(tempValues);
+    let result = isArrayValues ? [] : {};
+    if (tempValues === null || tempValues === undefined) {
+      return result;
+    }
+
+    Object.keys(tempValues).forEach((entityKey) => {
+      const transformForArray = (transformList, subItemValue) => {
+        if (!Array.isArray(transformList)) return entityKey;
+
+        transformList.forEach((transform, idx) => {
+          // 如果不存在直接返回
+          if (!transform) return;
+
+          const subTransformItem = subItemValue?.[idx];
+
+          // 如果是个方法，把key设置为方法的返回值
+          if (typeof transform === 'function') {
+            subItemValue[idx] = transform(subItemValue, entityKey, tempValues);
+          }
+          if (typeof transform === 'object' && !Array.isArray(transform)) {
+            Object.keys(transform).forEach((transformArrayItem) => {
+              const subTransformItemValue =
+                subTransformItem?.[transformArrayItem];
+              if (
+                typeof transform[transformArrayItem] === 'function' &&
+                subTransformItemValue
+              ) {
+                const res = transform[transformArrayItem](
+                  subTransformItem[transformArrayItem],
+                  entityKey,
+                  tempValues,
+                );
+                subTransformItem[transformArrayItem] =
+                  typeof res === 'object' ? res[transformArrayItem] : res;
+              } else if (
+                typeof transform[transformArrayItem] === 'object' &&
+                Array.isArray(transform[transformArrayItem]) &&
+                subTransformItemValue
+              ) {
+                transformForArray(
+                  transform[transformArrayItem],
+                  subTransformItemValue,
+                );
+              }
+            });
+          }
+          if (
+            typeof transform === 'object' &&
+            Array.isArray(transform) &&
+            subTransformItem
+          ) {
+            transformForArray(transform, subTransformItem);
+          }
+        });
+        return entityKey;
+      };
+
+      const key = parentsKey
+        ? [parentsKey, entityKey].flat(1)
+        : [entityKey].flat(1);
+      const itemValue = tempValues[entityKey];
+      const transformFunction = objectPath.get(dataFormatMap, key);
+
+      const transform = () => {
+        let tempKey,
+          transformedResult,
+          isTransformedResultPrimitive = false;
+
+        /**
+         * 先判断是否是方法，是的话执行后拿到值，如果是基本类型，则认为是直接 transform 为新的值，
+         * 如果返回是 Object 则认为是 transform 为新的 {newKey: newValue}
+         */
+        if (typeof transformFunction === 'function') {
+          transformedResult = transformFunction?.(
+            itemValue,
+            entityKey,
+            tempValues,
+          );
+          const typeOfResult = typeof transformedResult;
+          if (typeOfResult !== 'object' && typeOfResult !== 'undefined') {
+            tempKey = entityKey;
+            isTransformedResultPrimitive = true;
+          } else {
+            tempKey = transformedResult;
+          }
+        } else {
+          tempKey = transformForArray(transformFunction, itemValue);
+        }
+
+        // { [key:string]:any } 数组也能通过编译
+        if (Array.isArray(tempKey)) {
+          objectPath.set(result, tempKey, itemValue);
+          return;
+        }
+        if (typeof tempKey === 'object' && !Array.isArray(finalValues)) {
+          finalValues = deepMerge(finalValues, tempKey);
+        } else if (typeof tempKey === 'object' && Array.isArray(finalValues)) {
+          result = { ...result, ...tempKey };
+        } else if (tempKey !== null || tempKey !== undefined) {
+          objectPath.set(
+            result,
+            [tempKey],
+            isTransformedResultPrimitive ? transformedResult : itemValue,
+          );
+        }
+      };
+
+      /** 如果存在转化器提前渲染一下 */
+      if (transformFunction && typeof transformFunction === 'function') {
+        transform();
+      }
+
+      if (typeof window === 'undefined') return;
+      if (isPlainObj(itemValue)) {
+        const genValues = gen(itemValue, key);
+        if (Object.keys(genValues).length < 1) {
+          return;
+        }
+        objectPath.set(result, [entityKey], genValues);
+        return;
+      }
+      transform();
+    });
+    // namePath、transform在omit为false时需正常返回 https://github.com/ant-design/pro-components/issues/2901#issue-908097115
+    return omit ? result : tempValues;
+  };
+
+  finalValues =
+    Array.isArray(values) && Array.isArray(finalValues)
+      ? [...gen(values)]
+      : merge({}, gen(values), finalValues);
+
+  return finalValues;
+};
 
 const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
   return (
@@ -43,6 +262,11 @@ const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
 // Context
 export const SFormContext = createContext();
 export const useGetForm = () => React.useContext(SFormContext);
+
+// 组件内部使用的Context
+const SFormContextIner = createContext();
+const useGetFormIner = () => React.useContext(SFormContextIner);
+
 export const SRowContext = createContext();
 
 /**
@@ -67,17 +291,15 @@ export const useWatch = (names, f) => {
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
+    const { form, disabled } = useGetForm() || { form: props.form };
     const {
-      form,
-      disabled,
       justShow,
       labelCol: formLabelCol,
       wrapperCol: formWrapperCol,
       initialValues,
       itemPropsDefault,
-    } = useGetForm() || {
-      form: props.form,
-    };
+      setFieldValueType,
+    } = useGetFormIner() || {};
 
     const {
       name,
@@ -94,6 +316,8 @@ export const withFormItem = (Component, type) => {
       tipIcon,
       hideMb8px,
       styleFiled,
+      transform,
+      convertInitValue,
 
       // FormItem 的属性
       className,
@@ -112,6 +336,14 @@ export const withFormItem = (Component, type) => {
 
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
+
+    useEffect(() => {
+      if (!setFieldValueType || !name) {
+        return;
+      }
+
+      setFieldValueType(name, { transform });
+    }, [name, setFieldValueType, transform]);
 
     if (!form || !form.getFieldDecorator) {
       // 如果没有form对象，直接返回null
@@ -140,8 +372,6 @@ export const withFormItem = (Component, type) => {
       if (!flag) return null;
     }
 
-    if (!form) return null;
-
     const { getFieldDecorator } = form;
 
     const layoutLabelCol = labelCol || formLabelCol || { span: 8 };
@@ -159,6 +389,10 @@ export const withFormItem = (Component, type) => {
     let filed = getFieldDecorator(name, {
       type,
       initialValue: initVal,
+      initialValue:
+        typeof convertInitValue === 'function'
+          ? convertInitValue(initVal, initialValues)
+          : initVal,
       rules,
       ...filedOptions,
     })(
@@ -296,6 +530,7 @@ const FormBox = forwardRef(
       onFinish,
       loading,
       itemPropsDefault,
+      omitNil = true,
       children,
       // 不需要Form包裹
       noFormWrap = false,
@@ -304,9 +539,64 @@ const FormBox = forwardRef(
     },
     ref,
   ) => {
+    /** 保存 transformKeyRef，用于对表单key transform */
+    const transformKeyRef = useRef({});
     const [inLoading, setInLoading] = useState(false);
     const load = loading || inLoading;
-    useImperativeHandle(ref, () => form);
+
+    /** 使用 callback 的类型 */
+    const transformKey = useMemoizedFn((values, paramsOmitNil) => {
+      return transformKeySubmitValue(
+        values,
+        transformKeyRef.current,
+        paramsOmitNil,
+      );
+    });
+
+    const formatValues = useMemo(() => ({
+      /**
+       * 获取被格式化后的所有数据
+       *
+       * @example  getFieldsFormatValue() ->返回所有数据，即使没有被 form 托管的
+       */
+      getFieldsFormatValue: (...params) => {
+        return transformKey(form?.getFieldsValue(...params), !!omitNil);
+      },
+      /**
+       *验字段后返回格式化之后的所有数据
+       *
+       * @example validateFieldsReturnFormatValue -> {a:{b:value}}
+       */
+      validateFieldsReturnFormatValue: async (nameList, ...rest) => {
+        if (!Array.isArray(nameList) && nameList)
+          throw new Error('nameList must be array');
+
+        const values = await form.validateFields(nameList, ...rest);
+        const transformedKey = transformKey(values, !!omitNil);
+        return transformedKey ? transformedKey : {};
+      },
+      /**
+       * 验字段后混动到验证报错的位置后，返回格式化之后的所有数据
+       *
+       * @example validateFieldsReturnFormatValue -> {a:{b:value}}
+       */
+      validateFieldsReturnAndScrollFormatValue: async (nameList, ...rest) => {
+        if (!Array.isArray(nameList) && nameList)
+          throw new Error('nameList must be array');
+
+        const values = await form.validateFieldsAndScroll(nameList, ...rest);
+        const transformedKey = transformKey(values, !!omitNil);
+        return transformedKey ? transformedKey : {};
+      },
+    }));
+
+    const tempForm = useMemo(
+      () => ({
+        ...form,
+        ...formatValues,
+      }),
+      [form, formatValues],
+    );
 
     const finish = useMemoizedFn(
       async ({ verification = true, trim = false, andScroll = true } = {}) => {
@@ -315,12 +605,12 @@ const FormBox = forwardRef(
 
         if (verification) {
           if (andScroll) {
-            values = await form.validateFieldsAndScroll();
+            values = await tempForm.validateFieldsReturnAndScrollFormatValue();
           } else {
-            values = await form.validateFields();
+            values = await tempForm.validateFieldsReturnFormatValue();
           }
         } else {
-          values = await form.getFieldsValue();
+          values = await tempForm.getFieldsFormatValue();
         }
 
         const keys = Object.keys(values);
@@ -335,7 +625,7 @@ const FormBox = forwardRef(
 
         types = keys.reduce((obj, key) => {
           const newObj = { ...obj };
-          const type = form.getFieldProps(key)?.['data-__meta']?.type;
+          const type = tempForm.getFieldProps(key)?.['data-__meta']?.type;
           newObj[key] = type;
           return newObj;
         }, {});
@@ -356,25 +646,34 @@ const FormBox = forwardRef(
       },
     );
 
-    // eslint-disable-next-line no-param-reassign
-    form.finish = finish;
-    const child = typeof children === 'function' ? children(form) : children;
+    tempForm.finish = finish;
+    useImperativeHandle(ref, () => tempForm, [tempForm]);
+    const child =
+      typeof children === 'function' ? children(tempForm) : children;
 
     return (
-      <SFormContext.Provider
+      <SFormContextIner.Provider
         value={{
-          form,
           labelCol,
           wrapperCol,
           justShow,
-          initialValues,
           itemPropsDefault,
-          disabled: disabled ?? load,
-          loading: load,
+          initialValues,
+          setFieldValueType: (name, { transform }) => {
+            objectPath.set(transformKeyRef.current, name, transform);
+          },
         }}
       >
-        {noFormWrap ? child : <Form {...props}>{child}</Form>}
-      </SFormContext.Provider>
+        <SFormContext.Provider
+          value={{
+            form: tempForm,
+            disabled: disabled ?? load,
+            loading: load,
+          }}
+        >
+          {noFormWrap ? child : <Form {...props}>{child}</Form>}
+        </SFormContext.Provider>
+      </SFormContextIner.Provider>
     );
   },
 );
