@@ -27,7 +27,7 @@
 结合了 SFormBox 表单和 SRow 的布局
 这两个组件的属性都可以通过去 SForm 传入
 
-<!-- <code src='./Example1'></code> -->
+<code src='./Example1'></code>
 
 ### SForm
 
