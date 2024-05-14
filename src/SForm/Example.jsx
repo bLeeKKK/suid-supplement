@@ -1,10 +1,9 @@
 import { Button, Switch } from 'antd';
-import moment from 'moment';
 import React from 'react';
 import {
   ActionBtn,
+  FormBoxDependency,
   FormInput,
-  FormRangePicker,
   FormTextArea,
   SFormBox,
   SRow,
@@ -53,20 +52,37 @@ export default () => {
           }}
           ref={formRef}
         >
-          <FormTextArea
-            label="描述"
-            name="des"
-            initialValue="这是描述"
-            rules={[
-              {
-                required: true,
-                message: '请输入用户名',
-              },
-            ]}
-          />
+          <FormBoxDependency nameList={['age3']}>
+            {({ age3 }) => {
+              return age3 ? (
+                <FormTextArea
+                  label="描述"
+                  name="des"
+                  initialValue="这是描述"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入用户名',
+                    },
+                  ]}
+                />
+              ) : null;
+            }}
+          </FormBoxDependency>
+
+          <FormBoxDependency nameList={['userFormbox']}>
+            {({ userFormbox }) => {
+              return userFormbox ? (
+                <>
+                  <FormInput initialValue={1} label="年龄3" name="age3" />
+                </>
+              ) : null;
+            }}
+          </FormBoxDependency>
+
           <FormInput
             label="用户"
-            name="user-formbox"
+            name="userFormbox"
             rules={[
               {
                 required: true,
@@ -91,19 +107,19 @@ export default () => {
             }}
           />
 
-          <FormRangePicker
-            label="日期"
-            name="range"
-            convertInitValue={(_) => {
-              return [moment('2000-1-1'), moment('2000-1-2')];
-            }}
-            transform={(value) => {
-              return {
-                startTime: value?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
-                endTime: value?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
-              };
-            }}
-          />
+          {/* <FormRangePicker */}
+          {/*   label="日期" */}
+          {/*   name="range" */}
+          {/*   convertInitValue={(_) => { */}
+          {/*     return [moment('2000-1-1'), moment('2000-1-2')]; */}
+          {/*   }} */}
+          {/*   transform={(value) => { */}
+          {/*     return { */}
+          {/*       startTime: value?.[0]?.format('YYYY-MM-DD HH:mm:ss'), */}
+          {/*       endTime: value?.[1]?.format('YYYY-MM-DD HH:mm:ss'), */}
+          {/*     }; */}
+          {/*   }} */}
+          {/* /> */}
 
           <SRow type="flex" justify="center">
             <SRow.SCol className="mb-2 flex justify-center" span={8}>

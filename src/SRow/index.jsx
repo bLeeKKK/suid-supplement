@@ -29,7 +29,7 @@ const SCol = ({ span, children, ...props }) => {
 };
 
 // 创建Col包裹的项目
-export const withFormColItem = (Component) => {
+export const withColItem = (Component) => {
   const App = ({
     // hide,
     flexSpan,

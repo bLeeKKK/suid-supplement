@@ -1,4 +1,10 @@
-import { useDeepCompareEffect, useMemoizedFn } from 'ahooks';
+import {
+  useDeepCompareEffect,
+  useMemoizedFn,
+  useMount,
+  useUnmount,
+  useUpdate,
+} from 'ahooks';
 import { Button, Form } from 'antd';
 import classnames from 'classnames';
 import deepMerge from 'deepmerge';
@@ -25,9 +31,50 @@ import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
 import SAddix from '../SAddix';
 import { SIcon } from '../SIconBox';
-import SRow, { withFormColItem } from '../SRow';
+import SRow, { withColItem } from '../SRow';
 import { isNil } from '../utils/isNil';
 import styles from './styles.module.less';
+
+function deepEqual(obj1, obj2) {
+  // 如果两个值都是基本类型，直接比较值是否相等
+  if (obj1 === obj2) {
+    return true;
+  }
+
+  // 如果其中一个值是null，另一个不是，返回false
+  if (obj1 === null || obj2 === null) {
+    return false;
+  }
+
+  // 如果两个值的类型不同，返回false
+  if (typeof obj1 !== typeof obj2) {
+    return false;
+  }
+
+  // 如果是对象类型，则逐一比较每个属性
+  if (typeof obj1 === 'object') {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    // 检查属性数量是否一致
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    // 逐一比较每个属性值
+    for (let key of keys1) {
+      if (!deepEqual(obj1[key], obj2[key])) {
+        return false;
+      }
+    }
+
+    // 所有属性值都相等
+    return true;
+  }
+
+  // 其他情况，值不相等
+  return false;
+}
 
 const merge = (...rest) => {
   const obj = {};
@@ -257,17 +304,14 @@ const LabelBox = ({ label, tip, tipIcon = 'question-circle-o' }) => {
     </span>
   );
 };
-// const SCol = SRow.SCol;
 
-// Context
+// Form表单的一下基础状态,justShow
 export const SFormContext = createContext();
 export const useGetForm = () => React.useContext(SFormContext);
 
-// 组件内部使用的Context
+// 组件内部使用的Context,一般不对外暴露
 const SFormContextIner = createContext();
 const useGetFormIner = () => React.useContext(SFormContextIner);
-
-export const SRowContext = createContext();
 
 /**
  * 表单项值监听
@@ -288,6 +332,32 @@ export const useWatch = (names, f) => {
   return watch;
 };
 
+export const FormBoxDependency = ({ nameList, children, form }) => {
+  const valueList = useRef({});
+  const { form: formTemp } = useGetForm() || { form };
+  const { dependency } = useGetFormIner();
+  const up = useUpdate();
+  const update = (newVal, name) => {
+    const oldVal = objectPath.get(valueList.current, name);
+    if (deepEqual(oldVal, newVal)) return;
+    up();
+    objectPath.set(valueList.current, name, newVal);
+  };
+  useEffect(() => {
+    nameList.forEach((name) => {
+      const oldUpdates = objectPath.get(dependency.current, name) || [];
+      objectPath.set(dependency.current, name, [
+        ...new Set([...oldUpdates, update]),
+      ]);
+    });
+  }, [nameList, formTemp]);
+  const val = formTemp?.getFieldsValue(nameList);
+
+  return children?.(val || {});
+};
+
+export const SRowContext = createContext();
+
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
@@ -299,6 +369,7 @@ export const withFormItem = (Component, type) => {
       initialValues,
       itemPropsDefault,
       setFieldValueType,
+      dependency,
     } = useGetFormIner() || {};
 
     const {
@@ -311,7 +382,8 @@ export const withFormItem = (Component, type) => {
       initialValue,
       rules,
       onChange,
-      renderCondition,
+      // renderCondition,
+
       tip,
       tipIcon,
       hideMb8px,
@@ -337,6 +409,27 @@ export const withFormItem = (Component, type) => {
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
 
+    /**
+     * 注：表单数据变化，表单自动回更新表单下的依赖。
+     * 所以只用处理组件挂载和卸载时候表单数据更新不及时的问题
+     *
+     * */
+    useMount(() => {
+      // 挂载时触发一下依赖项目变动
+      const funs = objectPath.get(dependency.current, name);
+      if (funs && funs?.length) {
+        funs.forEach((fun) => fun(form.getFieldValue(name), name));
+      }
+    });
+    useUnmount(() => {
+      // 卸载时触发一下依赖项目变动
+      const funs = objectPath.get(dependency.current, name);
+      if (funs && funs?.length) {
+        funs.forEach((fun) => fun(undefined, name));
+      }
+    });
+
+    // 设置transform,到表单顶部
     useEffect(() => {
       if (!setFieldValueType || !name) {
         return;
@@ -350,27 +443,27 @@ export const withFormItem = (Component, type) => {
       return null;
     }
 
-    if (renderCondition !== undefined) {
-      // 条件判断，该项是否需要渲染到表单上
-      let flag = renderCondition;
-      if (typeof renderCondition === 'function') {
-        flag = renderCondition(form);
-      } else {
-        try {
-          let str = '';
-          for (const [key, valArr, operation] of renderCondition) {
-            const valTrue = form.getFieldValue(key);
-            str += valArr.includes(valTrue) + (operation || '');
-          }
-          // eslint-disable-next-line no-eval
-          flag = eval(str);
-        } catch (error) {
-          throw new Error('renderCondition 格式错误');
-        }
-      }
-
-      if (!flag) return null;
-    }
+    // if (renderCondition !== undefined) {
+    //   // 条件判断，该项是否需要渲染到表单上
+    //   let flag = renderCondition;
+    //   if (typeof renderCondition === 'function') {
+    //     flag = renderCondition(form);
+    //   } else {
+    //     try {
+    //       let str = '';
+    //       for (const [key, valArr, operation] of renderCondition) {
+    //         const valTrue = form.getFieldValue(key);
+    //         str += valArr.includes(valTrue) + (operation || '');
+    //       }
+    //       // eslint-disable-next-line no-eval
+    //       flag = eval(str);
+    //     } catch (error) {
+    //       throw new Error('renderCondition 格式错误');
+    //     }
+    //   }
+    //
+    //   if (!flag) return null;
+    // }
 
     const { getFieldDecorator } = form;
 
@@ -460,64 +553,64 @@ export const withFormItem = (Component, type) => {
 
 // 切换按钮
 export const FormSwitch = withFormItem(SSwitch, 'switch');
-export const ColFormSwitch = withFormColItem(FormSwitch);
+export const ColFormSwitch = withColItem(FormSwitch);
 // 单选框
 export const FormRadio = withFormItem(SRadio, 'radio');
-export const ColFormRadio = withFormColItem(FormRadio);
+export const ColFormRadio = withColItem(FormRadio);
 // 单选
 export const FormRadioGroup = withFormItem(SRadio.SRadioGroup, 'radioGroup');
-export const ColFormRadioGroup = withFormColItem(FormRadioGroup);
+export const ColFormRadioGroup = withColItem(FormRadioGroup);
 // 多选
 export const FormCheckboxGroup = withFormItem(
   SCheckbox.SCheckboxGroup,
   'checkboxGroup',
 );
-export const ColFormCheckboxGroup = withFormColItem(FormCheckboxGroup);
+export const ColFormCheckboxGroup = withColItem(FormCheckboxGroup);
 // 复选框
 export const FormCheckbox = withFormItem(SCheckbox, 'checkbox');
-export const ColFormCheckbox = withFormColItem(FormCheckbox);
+export const ColFormCheckbox = withColItem(FormCheckbox);
 // 日期选择
 export const FormDatePicker = withFormItem(SDatePicker, 'datePicker');
-export const ColFormDatePicker = withFormColItem(FormDatePicker);
+export const ColFormDatePicker = withColItem(FormDatePicker);
 // 时间段选择
 export const FormRangePicker = withFormItem(
   SDatePicker.SRangePicker,
   'rangePicker',
 );
-export const ColFormRangePicker = withFormColItem(FormRangePicker);
+export const ColFormRangePicker = withColItem(FormRangePicker);
 // 月份时间选择
 export const FormMonthPicker = withFormItem(
   SDatePicker.SMonthPicker,
   'monthPicker',
 );
-export const ColFormMonthPicker = withFormColItem(FormMonthPicker);
+export const ColFormMonthPicker = withColItem(FormMonthPicker);
 // 周时间选择
 export const FormWeekPicker = withFormItem(
   SDatePicker.SWeekPicker,
   'monthPicker',
 );
-export const ColFormWeekPicker = withFormColItem(FormWeekPicker);
+export const ColFormWeekPicker = withColItem(FormWeekPicker);
 // 时间选择time格式
 export const FormTimePicker = withFormItem(STimePicker, 'timePicker');
-export const ColFormTimePicker = withFormColItem(FormTimePicker);
+export const ColFormTimePicker = withColItem(FormTimePicker);
 // 输入框
 export const FormInput = withFormItem(SInput, 'input');
-export const ColFormInput = withFormColItem(FormInput);
+export const ColFormInput = withColItem(FormInput);
 // 下拉选择
 export const FormSelect = withFormItem(SSelect, 'select');
-export const ColFormSelect = withFormColItem(FormSelect);
+export const ColFormSelect = withColItem(FormSelect);
 // 下拉选择
 export const FormTextArea = withFormItem(STextArea, 'textArea');
-export const ColFormTextArea = withFormColItem(FormTextArea);
+export const ColFormTextArea = withColItem(FormTextArea);
 // 自定义新增标签
 export const FormTags = withFormItem(STags, 'tags');
-export const ColFormTags = withFormColItem(FormTags);
+export const ColFormTags = withColItem(FormTags);
 // 数字输入
 export const FormInputNumber = withFormItem(SInputNumber, 'number');
-export const ColFormInputNumber = withFormColItem(FormInputNumber);
+export const ColFormInputNumber = withColItem(FormInputNumber);
 // 输入框（快速搜索）
 export const FormSearch = withFormItem(SSearchPro, 'search');
-export const ColFormSearch = withFormColItem(FormSearch);
+export const ColFormSearch = withColItem(FormSearch);
 
 const FormBox = forwardRef(
   (
@@ -541,6 +634,7 @@ const FormBox = forwardRef(
   ) => {
     /** 保存 transformKeyRef，用于对表单key transform */
     const transformKeyRef = useRef({});
+    const dependency = useRef({});
     const [inLoading, setInLoading] = useState(false);
     const load = loading || inLoading;
 
@@ -662,6 +756,7 @@ const FormBox = forwardRef(
           setFieldValueType: (name, { transform }) => {
             objectPath.set(transformKeyRef.current, name, transform);
           },
+          dependency,
         }}
       >
         <SFormContext.Provider
@@ -750,8 +845,6 @@ const SForm = forwardRef(
           {formButtons && (
             <SFormContext.Consumer>
               {({ loading, form, ...props }) => {
-                // console.log(form.getFieldsError())
-
                 const reset = (
                   <Button
                     key="_reset"

@@ -17,6 +17,7 @@ import {
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
+  FormBoxDependency,
   SCheckbox,
   SForm,
   SFormBox,
@@ -135,21 +136,60 @@ export default () => {
             hidden: true,
           }}
         />
+        <FormBoxDependency nameList={['user.userName', 'money']}>
+          {(value) => {
+            console.log(value, 1);
+            return (
+              <ColFormSelect
+                span={16}
+                flexSpan
+                // wrapperCol={{ span: 12 }}
+                mode="multiple"
+                label="用户"
+                name="typeCode3"
+                extra="这里是额外说明"
+                reader={{
+                  value: 'id',
+                  label: 'firstName',
+                }}
+                // 自定义获取数据
+                searchForStore
+                // store={(...params) => getUserData(...params, count)}
+                paginated
+                storeOption={{
+                  defaultPageSize: 5,
+                  refreshDeps: [count],
+                }}
+                // renderCondition={(form) =>
+                //   form?.getFieldValue('userName') === '李四'
+                // }
+              />
+            );
+          }}
+        </FormBoxDependency>
+
         {/* </Tooltip> */}
-        <ColFormInput
-          tip="这里是【用户名】的说明提示"
-          filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
-          label="用户名"
-          overflowShowTip={false}
-          name="user.userName"
-          rules={[
-            {
-              required: true,
-              message: '请输入用户名',
-            },
-          ]}
-          initialValue="李四"
-        />
+        <FormBoxDependency nameList={['user.phone', 'userName1']}>
+          {(values) => {
+            console.log(values, 2);
+            return (
+              <ColFormInput
+                tip="这里是【用户名】的说明提示"
+                filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
+                label="用户名"
+                overflowShowTip={false}
+                name="user.userName"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入用户名',
+                  },
+                ]}
+                initialValue="李四"
+              />
+            );
+          }}
+        </FormBoxDependency>
         <ColFormInput
           tip="这里是【用户名】的说明提示"
           filedTip={{
@@ -230,28 +270,6 @@ export default () => {
             ))
           }
         </ColFormSelect>
-        <ColFormSelect
-          span={16}
-          flexSpan
-          // wrapperCol={{ span: 12 }}
-          mode="multiple"
-          label="用户"
-          name="typeCode3"
-          extra="这里是额外说明"
-          reader={{
-            value: 'id',
-            label: 'firstName',
-          }}
-          // 自定义获取数据
-          searchForStore
-          // store={(...params) => getUserData(...params, count)}
-          paginated
-          storeOption={{
-            defaultPageSize: 5,
-            refreshDeps: [count],
-          }}
-          renderCondition={(form) => form?.getFieldValue('userName') === '李四'}
-        />
         <ColFormTimePicker label="时间选择" name="time" />
         <ColFormDatePicker label="日期选择" name="date" />
         <ColFormRangePicker label="时间段选择" name="dateRange" />

@@ -30,6 +30,7 @@ export {
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
+  FormBoxDependency,
   FormCheckbox,
   FormCheckboxGroup,
   FormDatePicker,
@@ -67,7 +68,7 @@ export {
   useModalMountGetComponent,
   withModalControls,
 } from './SModal';
-export { default as SRow, withFormColItem } from './SRow';
+export { default as SRow, withColItem } from './SRow';
 export { default as STable } from './STable';
 export { default as Upload } from './Upload';
 export { useChannel } from './utils/channel';
