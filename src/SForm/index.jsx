@@ -409,24 +409,29 @@ export const withFormItem = (Component, type) => {
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
 
+    const showFlag = useMemo(() => {
+      const showOwn = typeof show === 'function' ? show(form) : show;
+      return show !== undefined ? showOwn : justShow;
+    }, [show, justShow, form]);
+
     /**
      * 注：表单数据变化，表单自动回更新表单下的依赖。
      * 所以只用处理组件挂载和卸载时候表单数据更新不及时的问题
      *
      * */
-    useMount(() => {
-      // 挂载时触发一下依赖项目变动
+    const dependencyEx = useMemoizedFn((newVal) => {
       const funs = objectPath.get(dependency.current, name);
       if (funs && funs?.length) {
-        funs.forEach((fun) => fun(form.getFieldValue(name), name));
+        funs.forEach((fun) => fun(newVal, name));
       }
+    });
+    useMount(() => {
+      // 挂载时触发一下依赖项目变动
+      dependencyEx(form.getFieldValue(name));
     });
     useUnmount(() => {
       // 卸载时触发一下依赖项目变动
-      const funs = objectPath.get(dependency.current, name);
-      if (funs && funs?.length) {
-        funs.forEach((fun) => fun(undefined, name));
-      }
+      dependencyEx(undefined);
     });
 
     // 设置transform,到表单顶部
@@ -470,8 +475,6 @@ export const withFormItem = (Component, type) => {
     const layoutLabelCol = labelCol || formLabelCol || { span: 8 };
     const layoutWrapperCol = wrapperCol || formWrapperCol || { span: 16 };
     const hideMb8pxFlag = hideMb8px === undefined ? justShow : hideMb8px;
-    const showOwn = typeof show === 'function' ? show(form) : show;
-    const showFlag = show !== undefined ? showOwn : justShow;
     const scale =
       layoutLabelCol.span / (layoutLabelCol.span + layoutWrapperCol.span);
 
