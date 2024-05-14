@@ -17,7 +17,6 @@ import {
   ColFormTextArea,
   ColFormTimePicker,
   ColFormWeekPicker,
-  FormBoxDependency,
   SCheckbox,
   SForm,
   SFormBox,
@@ -136,60 +135,45 @@ export default () => {
             hidden: true,
           }}
         />
-        <FormBoxDependency nameList={['user.userName', 'money']}>
-          {(value) => {
-            console.log(value, 1);
-            return (
-              <ColFormSelect
-                span={16}
-                flexSpan
-                // wrapperCol={{ span: 12 }}
-                mode="multiple"
-                label="用户"
-                name="typeCode3"
-                extra="这里是额外说明"
-                reader={{
-                  value: 'id',
-                  label: 'firstName',
-                }}
-                // 自定义获取数据
-                searchForStore
-                // store={(...params) => getUserData(...params, count)}
-                paginated
-                storeOption={{
-                  defaultPageSize: 5,
-                  refreshDeps: [count],
-                }}
-                // renderCondition={(form) =>
-                //   form?.getFieldValue('userName') === '李四'
-                // }
-              />
-            );
+        <ColFormSelect
+          span={16}
+          flexSpan
+          // wrapperCol={{ span: 12 }}
+          mode="multiple"
+          label="用户"
+          name="typeCode3"
+          extra="这里是额外说明"
+          reader={{
+            value: 'id',
+            label: 'firstName',
           }}
-        </FormBoxDependency>
+          // 自定义获取数据
+          searchForStore
+          // store={(...params) => getUserData(...params, count)}
+          paginated
+          storeOption={{
+            defaultPageSize: 5,
+            refreshDeps: [count],
+          }}
+          // renderCondition={(form) =>
+          //   form?.getFieldValue('userName') === '李四'
+          // }
+        />
 
-        {/* </Tooltip> */}
-        <FormBoxDependency nameList={['user.phone', 'userName1']}>
-          {(values) => {
-            console.log(values, 2);
-            return (
-              <ColFormInput
-                tip="这里是【用户名】的说明提示"
-                filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
-                label="用户名"
-                overflowShowTip={false}
-                name="user.userName"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入用户名',
-                  },
-                ]}
-                initialValue="李四"
-              />
-            );
-          }}
-        </FormBoxDependency>
+        <ColFormInput
+          tip="这里是【用户名】的说明提示"
+          filedTip="这里是【用户名】的说明提示 XXXXX X XXXXXXX"
+          label="用户名"
+          overflowShowTip={false}
+          name="user.userName"
+          rules={[
+            {
+              required: true,
+              message: '请输入用户名',
+            },
+          ]}
+          initialValue="李四"
+        />
         <ColFormInput
           tip="这里是【用户名】的说明提示"
           filedTip={{
