@@ -41,7 +41,7 @@ const SInputNumber = forwardRef(
     }, [show, value, form, renderForShow, formatter, overflowShowTip]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <InputNumber
         style={{ width: '100%', ...(props.style || {}) }}

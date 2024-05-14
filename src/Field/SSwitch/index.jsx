@@ -25,7 +25,7 @@ const SSwitch = forwardRef(
     }, [show, value, form, renderForShow]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <Switch {...props} checked={value} ref={ref} />
     );

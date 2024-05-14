@@ -197,7 +197,8 @@ export const SSelect = forwardRef(
       paginated,
       overflowShowTip,
     ]);
-    if (showFlag) return showValue;
+
+    if (showFlag) return <div ref={ref}>{showValue}</div>;
 
     return (
       <div

@@ -1,14 +1,11 @@
 import { useControllableValue } from 'ahooks';
 import { Input } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 
 const { TextArea } = Input;
 
 const STextArea = forwardRef(
   ({ show = false, renderForShow, form, ...props }, ref) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -26,7 +23,11 @@ const STextArea = forwardRef(
       return [flag, val];
     }, [show, value, form, renderForShow]);
 
-    return showFlag ? showValue : <TextArea {...props} ref={inputrRef} />;
+    return showFlag ? (
+      <div ref={ref}>{showValue}</div>
+    ) : (
+      <TextArea {...props} ref={ref} />
+    );
   },
 );
 

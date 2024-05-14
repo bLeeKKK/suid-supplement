@@ -39,7 +39,7 @@ const SDatePicker = forwardRef(
     }, [show, value, form, renderForShow, overflowShowTip, format]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <DatePicker
         {...props}
@@ -85,7 +85,7 @@ const SMonthPicker = forwardRef(
     }, [show, value, form, renderForShow, overflowShowTip, format]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <MonthPicker
         {...props}
@@ -131,7 +131,7 @@ const SWeekPicker = forwardRef(
     }, [show, value, form, renderForShow, overflowShowTip, format]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <WeekPicker
         {...props}
@@ -186,7 +186,7 @@ const SRangePicker = forwardRef(
     }, [show, value, form, renderForShow, overflowShowTip, format, showTime]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <RangePicker
         {...props}

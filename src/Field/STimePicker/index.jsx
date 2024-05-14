@@ -1,6 +1,6 @@
 import { useControllableValue } from 'ahooks';
 import { TimePicker } from 'antd';
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
 const STimePicker = forwardRef(
@@ -16,9 +16,6 @@ const STimePicker = forwardRef(
     },
     ref,
   ) => {
-    const inputrRef = useRef();
-    useImperativeHandle(ref, () => ({ inputrRef }));
-
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
       const flag = !!show;
@@ -40,13 +37,13 @@ const STimePicker = forwardRef(
     }, [show, value, form, renderForShow, overflowShowTip, format]);
 
     return showFlag ? (
-      showValue
+      <div ref={ref}>{showValue}</div>
     ) : (
       <TimePicker
         {...props}
         style={{ width: '100%', ...(style || {}) }}
         format={format}
-        ref={inputrRef}
+        ref={ref}
       />
     );
   },

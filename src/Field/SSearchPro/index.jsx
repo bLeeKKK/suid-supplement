@@ -79,7 +79,7 @@ const SearchPro = forwardRef(
     }, [ckFocus, shortcutKey, tabFocusOutSearch]);
 
     return showFlag ? (
-      showValue
+      <div ref={searchRef}>{showValue}</div>
     ) : (
       <Tooltip placement="bottom" title={props?.placeholder}>
         <div

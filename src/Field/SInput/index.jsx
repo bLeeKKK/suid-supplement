@@ -28,7 +28,11 @@ const SInput = forwardRef(
       return [flag, val];
     }, [show, value, form, renderForShow, overflowShowTip]);
 
-    return showFlag ? showValue : <Input {...props} ref={ref} />;
+    return showFlag ? (
+      <div ref={ref}>{showValue}</div>
+    ) : (
+      <Input {...props} ref={ref} />
+    );
   },
 );
 
