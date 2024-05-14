@@ -484,7 +484,7 @@ export const withFormItem = (Component, type) => {
       initialValue: initVal,
       initialValue:
         typeof convertInitValue === 'function'
-          ? convertInitValue(initVal, initialValues)
+          ? convertInitValue(initVal, initialValues, form)
           : initVal,
       rules,
       ...filedOptions,
