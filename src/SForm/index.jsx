@@ -384,6 +384,7 @@ export const withFormItem = (Component, type) => {
       onChange,
       // renderCondition,
 
+      hide,
       tip,
       tipIcon,
       hideMb8px,
@@ -490,6 +491,8 @@ export const withFormItem = (Component, type) => {
           ? convertInitValue(initVal, initialValues, form)
           : initVal,
       rules,
+      // 隐藏后忽略校验
+      hidden: !!hide ?? false,
       ...filedOptions,
     })(
       <Component
@@ -509,6 +512,7 @@ export const withFormItem = (Component, type) => {
           ...(hideMb8pxFlag ? { marginBottom: '0' } : {}),
           ...(style || {}),
           ...(autoScale ? { display: 'flex' } : {}),
+          ...(hide ? { display: 'none' } : {}),
         }}
         labelCol={
           autoScale
