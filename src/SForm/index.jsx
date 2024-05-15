@@ -488,7 +488,7 @@ export const withFormItem = (Component, type) => {
       initialValue: initVal,
       initialValue:
         typeof convertInitValue === 'function'
-          ? convertInitValue(initVal, initialValues, form)
+          ? convertInitValue({ initVal, initialValues, form })
           : initVal,
       rules,
       // 隐藏后忽略校验
