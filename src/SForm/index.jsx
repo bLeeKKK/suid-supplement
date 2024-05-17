@@ -423,6 +423,11 @@ export const withFormItem = (Component, type) => {
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
 
+    // name必须存在
+    if (!name) {
+      throw new Error('name is required');
+    }
+
     const showFlag = useMemo(() => {
       const showOwn = typeof show === 'function' ? show(form) : show;
       return show !== undefined ? showOwn : justShow;
@@ -506,7 +511,7 @@ export const withFormItem = (Component, type) => {
           : initVal,
       rules,
       // 隐藏后忽略校验
-      hidden: !!hide ?? false,
+      // hidden: !!hide ?? false,
       ...filedOptions,
     })(
       <Component
