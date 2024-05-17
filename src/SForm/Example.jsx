@@ -1,3 +1,4 @@
+import { useUpdate } from 'ahooks';
 import { Button, Switch } from 'antd';
 import React from 'react';
 import {
@@ -26,10 +27,12 @@ import {
 
 export default () => {
   const [checked, setChecked] = React.useState(false);
+  const update = useUpdate();
   const formRef = React.useRef();
 
   return (
     <>
+      <Button onClick={update}>重新渲染父组件</Button>
       <Switch
         checked={checked}
         onChange={() => setChecked((check) => !check)}

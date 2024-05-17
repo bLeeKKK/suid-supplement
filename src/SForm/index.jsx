@@ -314,22 +314,22 @@ const SFormContextIner = createContext();
 const useGetFormIner = () => React.useContext(SFormContextIner);
 
 /**
- * 表单项值监听
+ * @description 表单项值监听可能不及时,推荐使用FormBoxDependency
  * @param names {Array} 监听的表单项名称
  * @param f {Object} form对象
  *
  * @returns {Object} 返回监听的表单项值
  * */
 export const useWatch = (names, f) => {
-  const [watch, setWatch] = useState({});
+  // const [watch, setWatch] = useState({});
   const formObj = useGetForm();
   const form = f || formObj?.form;
   const vals = form?.getFieldsValue(names) || {};
-  useDeepCompareEffect(() => {
-    setWatch(vals);
-  }, [vals]);
+  // useDeepCompareEffect(() => {
+  //   setWatch(vals);
+  // }, [vals]);
 
-  return watch;
+  return vals;
 };
 
 export const FormBoxDependency = ({ nameList, children, form }) => {
@@ -337,26 +337,39 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
   const { form: formTemp } = useGetForm() || { form };
   const { dependency } = useGetFormIner();
   const up = useUpdate();
-  const update = (newVal, name) => {
+  const update = useMemoizedFn((newVal, name) => {
     const oldVal = objectPath.get(valueList.current, name);
     if (deepEqual(oldVal, newVal)) return;
     up();
     objectPath.set(valueList.current, name, newVal);
-  };
-  useEffect(() => {
+  });
+
+  useDeepCompareEffect(() => {
     nameList.forEach((name) => {
       const oldUpdates = objectPath.get(dependency.current, name) || [];
       objectPath.set(dependency.current, name, [
         ...new Set([...oldUpdates, update]),
       ]);
     });
-  }, [nameList, formTemp]);
+
+    return () => {
+      nameList.forEach((name) => {
+        const oldUpdates = objectPath.get(dependency.current, name) || [];
+        objectPath.set(
+          dependency.current,
+          name,
+          oldUpdates.filter((item) => item !== update),
+        );
+      });
+    };
+  }, [nameList, update]);
+
   const val = formTemp?.getFieldsValue(nameList);
 
   return children?.(val || {});
 };
 
-export const SRowContext = createContext();
+// export const SRowContext = createContext();
 
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
@@ -437,11 +450,12 @@ export const withFormItem = (Component, type) => {
 
     // 设置transform,到表单顶部
     useEffect(() => {
-      if (!setFieldValueType || !name) {
-        return;
-      }
-
+      if (transform === undefined) return;
       setFieldValueType(name, { transform });
+
+      return () => {
+        setFieldValueType(name, { transform: undefined });
+      };
     }, [name, setFieldValueType, transform]);
 
     if (!form || !form.getFieldDecorator) {
