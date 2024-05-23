@@ -22,18 +22,9 @@ export default () => {
           return p;
         }}
       >
-        <Item
-          key="mail"
-          title="邮件 Title"
-          iconDom={<Icon type="mail" antd />}
-        />
+        <Item key="mail" title="邮件 Title" iconDom={<Icon type="mail" />} />
         <DividerLine />
-        <Item
-          key="app"
-          tip="标题"
-          iconDom={<Icon separa type="appstore" />}
-          disabled
-        >
+        <Item key="app" tip="标题" iconDom={<Icon type="appstore" />} disabled>
           xxx
         </Item>
         <DividerLine />
@@ -66,18 +57,9 @@ export default () => {
           </SubMenu>
         </SubMenu>
         <DividerLine />
-        <Item
-          key="mail2"
-          title="邮件 Title2"
-          iconDom={<Icon type="mail" antd />}
-        />
+        <Item key="mail2" title="邮件 Title2" iconDom={<Icon type="mail" />} />
         <DividerLine />
-        <Item
-          key="app2"
-          tip="标题"
-          iconDom={<Icon separa type="appstore" />}
-          disabled
-        >
+        <Item key="app2" tip="标题" iconDom={<Icon type="appstore" />} disabled>
           xxx
         </Item>
         <DividerLine />

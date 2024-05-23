@@ -179,19 +179,17 @@ export const withModalControls = (Component) => {
  */
 export const useModalMountGetComponent = (Component, props = {}) => {
   const [visible, setVisible] = useControlVisible(props);
-  const app = (
+  const modalCounter = (
     <Component visible={visible} setVisible={setVisible} {...props} />
   );
 
-  return [
-    app,
-    {
-      show: () => setVisible(true),
-      close: () => setVisible(false),
-      visible,
-      setVisible,
-    },
-  ];
+  return {
+    modalCounter,
+    show: () => setVisible(true),
+    close: () => setVisible(false),
+    visible,
+    setVisible,
+  };
 };
 
 export default SModal;
