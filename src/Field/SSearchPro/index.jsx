@@ -83,7 +83,12 @@ const SearchPro = forwardRef(
     ) : (
       <Tooltip placement="bottom" title={props?.placeholder}>
         <div
-          className="w-full h-full relative"
+          // className="w-full h-full relative"
+          style={{
+            height: '100%',
+            width: '100%',
+            position: 'relative',
+          }}
           ref={includeDiv}
           onKeyDown={(e) => {
             // esc 退出
@@ -100,7 +105,21 @@ const SearchPro = forwardRef(
                 // 获取焦点
                 searchRef.current.focus();
               }}
-              className="cursor-pointer text-xs px-2 right-[4px] rounded-full shadow absolute top-1/2 transform -translate-y-1/2 bg-white z-10"
+              // className="cursor-pointer text-xs px-2 right-[4px] rounded-full shadow absolute top-1/2 transform -translate-y-1/2 bg-white z-10"
+              style={{
+                cursor: 'pointer',
+                fontSize: '0.75rem',
+                lineHeight: '1rem',
+                padding: '0 8px',
+                right: '4px',
+                borderRadius: '9999px',
+                boxShadow: '0 0 4px rgba(0, 0, 0, 0.1)',
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: '#fff',
+                zIndex: '10',
+              }}
             >
               {isMacOS ? '⌘' : 'Ctrl'} K
             </span>

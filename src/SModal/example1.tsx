@@ -5,8 +5,8 @@ import {
   SForm,
   SModal,
   createModalMount,
+  useComponentModal,
   useModalMount,
-  useModalMountGetComponent,
 } from 'suid-supplement';
 // import ReactDOM from 'react-dom';
 
@@ -55,7 +55,7 @@ export default () => {
   });
 
   // 废弃，尽量不要使用。可以直接定义组件使用
-  const [app, { show: show2 }] = useModalMountGetComponent(FormModal, {
+  const [app, { show: show2 }] = useComponentModal(FormModal, {
     data,
     setData,
   });

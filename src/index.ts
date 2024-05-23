@@ -63,9 +63,9 @@ export {
 export {
   default as SModal,
   createModalMount,
+  useComponentModal,
   useControlVisible,
   useModalMount,
-  useModalMountGetComponent,
   withModalControls,
 } from './SModal';
 export { default as SRow, withColItem } from './SRow';

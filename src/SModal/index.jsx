@@ -177,7 +177,7 @@ export const withModalControls = (Component) => {
 /**
  * @description 废弃，可以直接使用组件放到页面中
  */
-export const useModalMountGetComponent = (Component, props = {}) => {
+export const useComponentModal = (Component, props = {}) => {
   const [visible, setVisible] = useControlVisible(props);
   const modalCounter = (
     <Component visible={visible} setVisible={setVisible} {...props} />
