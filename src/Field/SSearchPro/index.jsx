@@ -10,8 +10,7 @@ import React, {
 } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
 
-const isMacOS =
-  navigator.userAgentData.platform.toUpperCase().indexOf('MAC') >= 0;
+const isMacOS = navigator?.platform?.toUpperCase?.()?.indexOf?.('MAC') >= 0;
 const { Search } = Input;
 
 /**
