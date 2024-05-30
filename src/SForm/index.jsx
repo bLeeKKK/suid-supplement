@@ -442,6 +442,7 @@ export const withFormItem = (Component, type) => {
      *
      * */
     const dependencyEx = useMemoizedFn((newVal) => {
+      if (!dependency?.current) return;
       // FormBoxDependency 触发
       const funs = objectPath.get(dependency.current, name);
       if (funs && funs?.length) {
