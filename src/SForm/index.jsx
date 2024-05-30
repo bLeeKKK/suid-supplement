@@ -1,10 +1,4 @@
-import {
-  useDeepCompareEffect,
-  useMemoizedFn,
-  useMount,
-  useUnmount,
-  useUpdate,
-} from 'ahooks';
+import { useMemoizedFn, useMount, useUnmount, useUpdate } from 'ahooks';
 import { Button, Form } from 'antd';
 import classnames from 'classnames';
 import deepMerge from 'deepmerge';
@@ -340,27 +334,23 @@ export const useWatch = (nameList, f) => {
 
   // 监听form 自动更新
   const vals = form?.getFieldsValue(nameList) || {};
+  nameList.forEach((name) => {
+    const oldUpdates = objectPath.get(dependency.current, `${name}`) || [];
+    objectPath.set(dependency.current, `${name}`, [
+      ...new Set([...oldUpdates, update]),
+    ]);
+  });
 
-  useDeepCompareEffect(() => {
-    if (!dependency) return;
+  useUnmount(() => {
     nameList.forEach((name) => {
       const oldUpdates = objectPath.get(dependency.current, `${name}`) || [];
-      objectPath.set(dependency.current, `${name}`, [
-        ...new Set([...oldUpdates, update]),
-      ]);
+      objectPath.set(
+        dependency.current,
+        name,
+        oldUpdates.filter((item) => item !== update),
+      );
     });
-
-    return () => {
-      nameList.forEach((name) => {
-        const oldUpdates = objectPath.get(dependency.current, `${name}`) || [];
-        objectPath.set(
-          dependency.current,
-          name,
-          oldUpdates.filter((item) => item !== update),
-        );
-      });
-    };
-  }, [nameList, update]);
+  });
 
   return vals;
 };
