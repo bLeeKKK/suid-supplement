@@ -315,28 +315,22 @@ const useGetFormIner = () => React.useContext(SFormContextIner);
 
 /**
  * @description 表单项值监听可能不及时,推荐使用FormBoxDependency
- * @param names {Array} 监听的表单项名称
+ * @param nameList {Array} 监听的表单项名称
  * @param f {Object} form对象
  *
  * @returns {Object} 返回监听的表单项值
  * */
-export const useWatch = (names, f) => {
-  // const [watch, setWatch] = useState({});
+export const useWatch = (nameList, f) => {
+  const valueList = useRef({});
   const formObj = useGetForm();
   const form = f || formObj?.form;
-  const vals = form?.getFieldsValue(names) || {};
-  // useDeepCompareEffect(() => {
-  //   setWatch(vals);
-  // }, [vals]);
 
-  return vals;
-};
-
-export const FormBoxDependency = ({ nameList, children, form }) => {
-  const valueList = useRef({});
-  const { form: formTemp } = useGetForm() || { form };
-  const { dependency } = useGetFormIner();
+  const depend = useRef({});
+  const dependency = form.dependency || depend;
+  form.dependency = dependency;
+  // const { dependency } = useGetFormIner() || { dependency: depend };
   const up = useUpdate();
+
   const update = useMemoizedFn((newVal, name) => {
     const oldVal = objectPath.get(valueList.current, name);
     if (deepEqual(oldVal, newVal)) return;
@@ -344,17 +338,21 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
     objectPath.set(valueList.current, name, newVal);
   });
 
+  // 监听form 自动更新
+  const vals = form?.getFieldsValue(nameList) || {};
+
   useDeepCompareEffect(() => {
+    if (!dependency) return;
     nameList.forEach((name) => {
-      const oldUpdates = objectPath.get(dependency.current, name) || [];
-      objectPath.set(dependency.current, name, [
+      const oldUpdates = objectPath.get(dependency.current, `${name}`) || [];
+      objectPath.set(dependency.current, `${name}`, [
         ...new Set([...oldUpdates, update]),
       ]);
     });
 
     return () => {
       nameList.forEach((name) => {
-        const oldUpdates = objectPath.get(dependency.current, name) || [];
+        const oldUpdates = objectPath.get(dependency.current, `${name}`) || [];
         objectPath.set(
           dependency.current,
           name,
@@ -364,7 +362,11 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
     };
   }, [nameList, update]);
 
-  const val = formTemp?.getFieldsValue(nameList);
+  return vals;
+};
+
+export const FormBoxDependency = ({ nameList, children, form }) => {
+  const val = useWatch(nameList, form);
 
   return children?.(val || {});
 };
@@ -375,6 +377,7 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
 export const withFormItem = (Component, type) => {
   const App = (props) => {
     const { form, disabled } = useGetForm() || { form: props.form };
+    const dependency = form?.dependency;
     const {
       justShow,
       labelCol: formLabelCol,
@@ -382,7 +385,7 @@ export const withFormItem = (Component, type) => {
       initialValues,
       itemPropsDefault,
       setFieldValueType,
-      dependency,
+      // dependency,
     } = useGetFormIner() || {};
 
     const {
@@ -439,10 +442,17 @@ export const withFormItem = (Component, type) => {
      *
      * */
     const dependencyEx = useMemoizedFn((newVal) => {
+      // FormBoxDependency 触发
       const funs = objectPath.get(dependency.current, name);
       if (funs && funs?.length) {
         funs.forEach((fun) => fun(newVal, name));
       }
+
+      // useWatch 触发
+      // const funsWatch = objectPath.get(dependency.current,  `_watch_${name}`);
+      // if (funsWatch && funsWatch?.length) {
+      //   funsWatch.forEach((fun) => fun(newVal, name));
+      // }
     });
     useMount(() => {
       // 挂载时触发一下依赖项目变动
@@ -660,7 +670,7 @@ const FormBox = forwardRef(
   ) => {
     /** 保存 transformKeyRef，用于对表单key transform */
     const transformKeyRef = useRef({});
-    const dependency = useRef({});
+    // const dependency = useRef({});
     const [inLoading, setInLoading] = useState(false);
     const load = loading || inLoading;
 
@@ -782,7 +792,7 @@ const FormBox = forwardRef(
           setFieldValueType: (name, { transform }) => {
             objectPath.set(transformKeyRef.current, name, transform);
           },
-          dependency,
+          // dependency,
         }}
       >
         <SFormContext.Provider

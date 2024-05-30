@@ -1,4 +1,4 @@
-import { Button, Switch } from 'antd';
+import { Button, Form, Switch } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import {
@@ -22,6 +22,7 @@ import {
   SFormBox,
   SRadio,
   SRow,
+  useWatch,
 } from 'suid-supplement';
 
 const getDirctData = async (code, count, filters) => {
@@ -57,11 +58,19 @@ const getDirctData = async (code, count, filters) => {
 //   return { list: data?.rows, total: data?.records };
 // };
 
-export default () => {
+const TestUseWatch = () => {
+  const watch = useWatch(['description']);
+  console.log(watch, 'watch1');
+  return <>watch</>;
+};
+
+export default Form.create()(({ form }) => {
   const [addInput, setAddInput] = React.useState(false);
   const [count, setCount] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
   const formRef = React.useRef();
+  const watch = useWatch(['userName1'], form);
+  console.log(watch, 'watch2');
 
   return (
     <>
@@ -73,6 +82,7 @@ export default () => {
       <Button onClick={() => setAddInput((f) => !f)}>追加输入框</Button>
       <hr />
       <SForm
+        form={form}
         justShow={checked}
         basicSpan={12}
         formButtons={!checked}
@@ -95,6 +105,7 @@ export default () => {
         //   },
         // }}
       >
+        <TestUseWatch />
         {addInput && <ColFormInput label="追加Input" name="addInput" />}
         <ColFormTextArea
           label="描述"
@@ -347,4 +358,4 @@ export default () => {
       </ActionBtn>
     </>
   );
-};
+});
