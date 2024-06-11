@@ -1,4 +1,4 @@
-import { useAntdTable, useControllableValue, useUpdateEffect } from 'ahooks';
+import { useAntdTable, useControllableValue } from 'ahooks';
 import { Icon, Input, Pagination, Select, Spin, Tooltip } from 'antd';
 import classnames from 'classnames';
 import React, {
@@ -65,14 +65,11 @@ export const SSelect = forwardRef(
       ...storeOption,
     });
 
-    const [searchVal, setSearchVal] = useState('');
-    useUpdateEffect(() => {
-      tableProps.onChange(pagination, searchVal);
-    }, [searchVal]);
+    // const [searchVal, setSearchVal] = useState('');
 
     const errorMessage = error && error.message;
     const arrOptions = useMemo(() => {
-      const newData = Array.isArray(data) ? data : [];
+      const newData = Array.isArray(data) ? data : data?.list || [];
       const arr = typeof options === 'function' ? options(newData) : options;
 
       return (arr || newData).map((res, i) => {
@@ -263,7 +260,12 @@ export const SSelect = forwardRef(
                   }}
                   ref={searchRef}
                 >
-                  <Search onSearch={(val) => setSearchVal(val)} />
+                  <Search
+                    onSearch={(val) => {
+                      // setSearchVal(val)
+                      tableProps.onChange(pagination, val);
+                    }}
+                  />
                 </div>
               )}
               <div ref={menuRef}>{menu}</div>
