@@ -564,7 +564,7 @@ export const withFormItem = (Component, type) => {
         className={classnames(
           'ss-form-item',
           {
-            ['err-inline']: errInline,
+            ['ss-form-item-err-inline']: errInline,
           },
           className,
         )}

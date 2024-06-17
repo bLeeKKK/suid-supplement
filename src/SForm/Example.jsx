@@ -62,6 +62,7 @@ export default () => {
                   label="描述"
                   name="des"
                   initialValue="这是描述"
+                  errInline
                   rules={[
                     {
                       required: true,
