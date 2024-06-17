@@ -75,7 +75,7 @@ export const SSelect = forwardRef(
       return (arr || newData).map((res, i) => {
         return {
           ...res,
-          value: res[reader.value] || i,
+          value: res[reader.value],
           label: res[reader.label],
         };
       });
