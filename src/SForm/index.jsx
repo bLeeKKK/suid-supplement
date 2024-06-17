@@ -27,7 +27,7 @@ import SAddix from '../SAddix';
 import { SIcon } from '../SIconBox';
 import SRow, { withColItem } from '../SRow';
 import { isNil } from '../utils/isNil';
-import styles from './styles.module.less';
+import './styles.less';
 
 function deepEqual(obj1, obj2) {
   // 如果两个值都是基本类型，直接比较值是否相等
@@ -412,6 +412,7 @@ export const withFormItem = (Component, type) => {
       labelAlign,
       required,
       validateStatus,
+      errInline = false,
 
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
@@ -560,7 +561,13 @@ export const withFormItem = (Component, type) => {
               }
             : layoutWrapperCol
         }
-        className={classnames(styles['ss-form-item'], className)}
+        className={classnames(
+          'ss-form-item',
+          {
+            ['err-inline']: errInline,
+          },
+          className,
+        )}
         colon={colon}
         extra={extra}
         hasFeedback={hasFeedback}

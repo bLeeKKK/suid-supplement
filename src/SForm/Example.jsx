@@ -127,8 +127,19 @@ export default () => {
           <SRow type="flex" justify="center">
             <SRow.SCol className="mb-2 flex justify-center" span={8}>
               <SFormBox.Consumer>
-                {({ form, loading }) => (
+                {({ form, loading }) => [
                   <Button
+                    key="reset"
+                    className="mr-2"
+                    onClick={() => {
+                      form.resetFields();
+                    }}
+                    loading={loading}
+                  >
+                    重置
+                  </Button>,
+                  <Button
+                    key="submit"
                     type="primary"
                     onClick={() => {
                       form.finish();
@@ -136,8 +147,8 @@ export default () => {
                     loading={loading}
                   >
                     内部按钮
-                  </Button>
-                )}
+                  </Button>,
+                ]}
               </SFormBox.Consumer>
             </SRow.SCol>
           </SRow>
