@@ -13,13 +13,15 @@ export const IconContext = createContext({});
 export const useIconContext = () => useContext(IconContext);
 
 export const SIcon = (props) => {
-  const { tooltip = {}, title, className, ...restProps } = props;
+  const { tooltip = {}, title, className, disabled, ...restProps } = props;
 
   const icon = (
     <span>
       <Icon
         {...restProps}
-        className={classnames(className, 'hover:text-[#198FFF]')}
+        className={classnames(className, 's-s-icon-box-item', {
+          's-s-icon-box-disabled': disabled,
+        })}
       />
     </span>
   );
@@ -68,9 +70,9 @@ export const ActionIcon = ({ ...props }) => {
   return render ? render({ dom: IconDomA, iconOrMenu: 'icon' }) : IconDomA;
 };
 
-export const ActionMenu = ({ res }) => {
+export const ActionMenu = ({ ...res }) => {
   const [inLoading, setInLoading] = useState(false);
-  const { render, loading = false, onClick, ...resProps } = res;
+  const { render, loading = false, onClick, disabled, ...resProps } = res;
   const click = (...args) => {
     const r = onClick(...args);
     if (r && r.then) {
@@ -94,15 +96,10 @@ export const ActionMenu = ({ res }) => {
 
   return (
     <div
-      style={{
-        textAlign: 'center',
-        ...(load
-          ? {
-              pointerEvents: 'none',
-              opacity: 0.5,
-            }
-          : {}),
-      }}
+      className={classnames('s-s-icon-menu-item', {
+        loading: load,
+        ['s-s-icon-menu-disabled']: disabled,
+      })}
       onClick={click}
       {...resProps}
     >
@@ -111,7 +108,12 @@ export const ActionMenu = ({ res }) => {
   );
 };
 
-export const IconsBox = ({ iconArr = [], limt, moreIcon = 'more' }) => {
+export const IconsBox = ({
+  iconArr = [],
+  limt,
+  moreIcon = 'more',
+  dropdownProps = {},
+}) => {
   const arr = iconArr.filter((res) => !res.hide);
 
   const len = limt || arr.length;
@@ -131,11 +133,12 @@ export const IconsBox = ({ iconArr = [], limt, moreIcon = 'more' }) => {
       {arr.length ? (
         <Dropdown
           placement="topLeft"
+          {...(dropdownProps || {})}
           overlay={
             <Menu>
-              {arr.map((res) => (
-                <Menu.Item key={`list-${res.type}`}>
-                  <ActionMenu res={res} />
+              {arr.map(({ disabled, ...res }) => (
+                <Menu.Item disabled={disabled} key={`list-${res.type}`}>
+                  <ActionMenu disabled={disabled} {...res} />
                 </Menu.Item>
               ))}
             </Menu>

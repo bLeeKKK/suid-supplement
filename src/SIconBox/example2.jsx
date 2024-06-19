@@ -20,6 +20,7 @@ export default () => {
           title: '编辑',
           type: 'edit',
           onClick: console.log,
+          disabled: true,
         },
         {
           title: '删除',
@@ -30,7 +31,19 @@ export default () => {
           title: '打印',
           type: 'printer',
           onClick: console.log,
+          disabled: true,
         },
+        // {
+        //   title: '打印2222222',
+        //   type: 'printer',
+        //   onClick: () => {
+        //     console.log(8888);
+        //     const p = new Promise((resolve) => {
+        //       setTimeout(resolve, 10000);
+        //     });
+        //     return p;
+        //   },
+        // },
       ]}
     />
   );

@@ -72,7 +72,7 @@ export const SSelect = forwardRef(
       const newData = Array.isArray(data) ? data : data?.list || [];
       const arr = typeof options === 'function' ? options(newData) : options;
 
-      return (arr || newData).map((res, i) => {
+      return (arr || newData).map((res) => {
         return {
           ...res,
           value: res[reader.value],
@@ -159,7 +159,7 @@ export const SSelect = forwardRef(
         } else {
           val = optionChildren.find((item) => {
             const diffVal = Array.isArray(value) ? value[0] : value;
-            return item.key === diffVal;
+            return item?.props?.value === diffVal;
           })?.props?.children;
         }
       }

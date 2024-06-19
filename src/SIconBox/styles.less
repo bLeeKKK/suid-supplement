@@ -1,3 +1,27 @@
+.s-s-icon-box-item {
+  &:hover {
+    color: #198fff;
+  }
+
+  &.s-s-icon-box-disabled {
+    pointer-events: none;
+    color: #ccc;
+  }
+}
+
+.s-s-icon-menu-item {
+  text-align: center;
+
+  &.loading {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &.s-s-icon-menu-disabled {
+    pointer-events: none;
+  }
+}
+
 .s-s-icon-menu {
   ul.ant-menu-horizontal {
     line-height: 24px;
