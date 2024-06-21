@@ -151,17 +151,24 @@ export default Form.create()(({ form }) => {
           flexSpan
           // wrapperCol={{ span: 12 }}
           mode="multiple"
+          options={[
+            { label: 'Apple', value: 'apple' },
+            { label: 'Pear', value: 'pear' },
+            { label: 'Banana', value: 'banana' },
+            { label: 'Orange', value: 'orange' },
+          ]}
+          initialValue={['apple', 'pear', 'xxxx']}
           label="用户"
           name="typeCode3"
           extra="这里是额外说明"
-          reader={{
-            value: 'id',
-            label: 'firstName',
-          }}
+          // reader={{
+          //   value: 'id',
+          //   label: 'firstName',
+          // }}
           // 自定义获取数据
-          searchForStore
+          // searchForStore
           // store={(...params) => getUserData(...params, count)}
-          paginated
+          // paginated
           storeOption={{
             defaultPageSize: 5,
             refreshDeps: [count],

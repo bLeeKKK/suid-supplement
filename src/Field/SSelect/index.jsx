@@ -152,15 +152,22 @@ export const SSelect = forwardRef(
       // 注：建议只有不存在分页的情况使用，不然展示可能出错
       if (Array.isArray(optionChildren) && !paginated) {
         if (multiple) {
-          val = optionChildren
-            .filter((item) => value?.includes(item.key))
-            .map((item) => item.props.children)
-            .join('、');
+          console.log(value);
+          val = Array.isArray(value)
+            ? value
+                .map(
+                  (v) =>
+                    optionChildren.find((item) => v === item.key)?.props
+                      ?.children || v,
+                )
+                .join('、')
+            : value;
         } else {
-          val = optionChildren.find((item) => {
-            const diffVal = Array.isArray(value) ? value[0] : value;
-            return item?.props?.value === diffVal;
-          })?.props?.children;
+          val =
+            optionChildren.find((item) => {
+              const diffVal = Array.isArray(value) ? value[0] : value;
+              return item?.props?.value === diffVal;
+            })?.props?.children || value;
         }
       }
 
