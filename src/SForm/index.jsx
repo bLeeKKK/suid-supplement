@@ -319,6 +319,12 @@ export const useWatch = (nameList, f) => {
   const formObj = useGetForm();
   const form = f || formObj?.form;
 
+  if (!form) {
+    throw new Error(
+      'useWatch 必须在FormBox中使用，或者指定form作为第二个参数传入',
+    );
+  }
+
   const depend = useRef({});
   const dependency = form.dependency || depend;
   form.dependency = dependency;

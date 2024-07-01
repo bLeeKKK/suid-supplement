@@ -152,7 +152,6 @@ export const SSelect = forwardRef(
       // 注：建议只有不存在分页的情况使用，不然展示可能出错
       if (Array.isArray(optionChildren) && !paginated) {
         if (multiple) {
-          console.log(value);
           val = Array.isArray(value)
             ? value
                 .map(
