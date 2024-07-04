@@ -55,7 +55,7 @@ export default () => {
   });
 
   // 废弃，尽量不要使用。可以直接定义组件使用
-  const [app, { show: show2 }] = useComponentModal(FormModal, {
+  const { modalCounter: app, show: show2 } = useComponentModal(FormModal, {
     data,
     setData,
   });
@@ -76,7 +76,7 @@ export default () => {
 
       {app}
       <Button onClick={show2} className="mr-2">
-        命令弹框hook-手动挂载-享受React上下文 (注：不推荐使用)
+        命令弹框hook-手动挂载-享受React上下文
       </Button>
     </div>
   );

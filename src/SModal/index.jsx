@@ -175,7 +175,7 @@ export const withModalControls = (Component) => {
 };
 
 /**
- * @description 废弃，可以直接使用组件放到页面中
+ * @description 可以直接使用组件放到页面中
  */
 export const useComponentModal = (Component, props = {}) => {
   const [visible, setVisible] = useControlVisible(props);
