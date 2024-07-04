@@ -26,13 +26,13 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm run build
+          # npm run build
           npm run docs:build
 
-      - name: Deply npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Deply npm
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy docs
         uses: peaceiris/actions-gh-pages@v3
