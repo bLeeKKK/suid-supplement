@@ -2,7 +2,7 @@ import { useInViewport } from 'ahooks';
 import { Affix } from 'antd';
 import React, { useState } from 'react';
 
-const SAddix = ({ children, scope, ...props }) => {
+const SAffix = ({ children, scope, ...props }) => {
   const [affix, setAffix] = useState(false);
   const [inViewport] = useInViewport(scope);
   const child =
@@ -18,4 +18,4 @@ const SAddix = ({ children, scope, ...props }) => {
   );
 };
 
-export default SAddix;
+export default SAffix;

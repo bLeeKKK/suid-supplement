@@ -23,7 +23,7 @@ import SSwitch from '../Field/SSwitch';
 import STags from '../Field/STags';
 import STextArea from '../Field/STextArea';
 import STimePicker from '../Field/STimePicker';
-import SAddix from '../SAddix';
+import SAffix from '../SAffix';
 import { SIcon } from '../SIconBox';
 import SRow, { withColItem } from '../SRow';
 import { isNil } from '../utils/isNil';
@@ -923,11 +923,11 @@ const SForm = forwardRef(
                 }
 
                 return (
-                  <SAddix scope={warp} offsetBottom={0}>
+                  <SAffix scope={warp} offsetBottom={0}>
                     <div className="text-right py-2 px-4 space-x-2 bg-white border-x-0 border-b-0 border-solid border-gray-300">
                       {btns}
                     </div>
-                  </SAddix>
+                  </SAffix>
                 );
               }}
             </SFormContext.Consumer>
