@@ -97,7 +97,7 @@ const SRadioGroup = forwardRef(
     }, [options, data, reader]);
 
     const optionChildren =
-      typeof children === 'function' ? children(arrOptions, Radio) : children;
+      typeof children === 'function' ? children(arrOptions, SRadio) : children;
 
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {

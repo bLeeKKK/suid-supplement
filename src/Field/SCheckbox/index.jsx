@@ -106,7 +106,9 @@ const SCheckboxGroup = forwardRef(
     }, [options, data, reader]);
 
     const optionChildren =
-      typeof children === 'function' ? children(arrOptions) : children;
+      typeof children === 'function'
+        ? children(arrOptions, SCheckbox)
+        : children;
 
     const [value] = useControllableValue(props);
     const [showFlag, showValue] = useMemo(() => {
