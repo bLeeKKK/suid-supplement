@@ -429,6 +429,7 @@ export default () => {
             {({ age3 }) => {
               return age3 ? (
                 <FormTextArea
+                  disabled={false}
                   label="\u63CF\u8FF0"
                   name="des"
                   initialValue="\u8FD9\u662F\u63CF\u8FF0"
