@@ -60,6 +60,7 @@ export default () => {
             {({ age3 }) => {
               return age3 ? (
                 <FormTextArea
+                  disabled={false}
                   label="描述"
                   name="des"
                   initialValue="这是描述"

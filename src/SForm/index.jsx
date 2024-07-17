@@ -372,7 +372,7 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
-    const { form, disabled } = useGetForm() || {
+    const { form, disabled: disabledForm } = useGetForm() || {
       form: props.form || {
         getFieldDecorator: (name, options) => (dom) =>
           React.cloneElement(dom, {
@@ -394,6 +394,7 @@ export const withFormItem = (Component, type) => {
     } = useGetFormIner() || {};
 
     const {
+      disabled,
       name,
       filedTip,
       show,
@@ -535,7 +536,7 @@ export const withFormItem = (Component, type) => {
         show={showFlag}
         form={form}
         onChange={onChange && ((...params) => onChange(...params, form))}
-        disabled={disabled}
+        disabled={disabled || disabledForm}
         style={styleFiled}
         {...residue}
       />,
