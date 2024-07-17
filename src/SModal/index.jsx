@@ -3,7 +3,6 @@ import { Modal } from 'antd';
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -50,7 +49,17 @@ export const useControlVisible = (props = {}) => {
 const withModalApp = (Component, { autoClear = true } = {}) => {
   const App = forwardRef(({ _clear: clear, ...props }, ref) => {
     const timer = useRef();
-    const [visible, setVisible] = useControlVisible(props);
+    const [visible, setVis] = useControlVisible(props);
+    const setVisible = (flag, ...params) => {
+      setVis(flag, ...params);
+
+      if (!autoClear) return;
+      // 关闭窗口1s后，自动清理
+      if (timer.current) clearTimeout(timer.current);
+      if (!flag && clear) {
+        timer.current = setTimeout(clear, 1000);
+      }
+    };
 
     useImperativeHandle(ref, () => ({
       clear,
@@ -58,14 +67,14 @@ const withModalApp = (Component, { autoClear = true } = {}) => {
       setVisible,
     }));
 
-    useEffect(() => {
-      if (!autoClear) return;
-      // 关闭窗口后，自动清理
-      if (timer.current) clearTimeout(timer.current);
-      if (!visible && clear) {
-        timer.current = setTimeout(clear, 1000);
-      }
-    }, [visible, clear]);
+    // useEffect(() => {
+    //   if (!autoClear) return;
+    //   // 关闭窗口后，自动清理
+    //   if (timer.current) clearTimeout(timer.current);
+    //   if (!visible && clear) {
+    //     timer.current = setTimeout(clear, 1000);
+    //   }
+    // }, [visible, clear]);
 
     return (
       <Component
