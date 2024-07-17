@@ -32,6 +32,7 @@ export default () => {
 
   return (
     <>
+      <FormInput name="xxx" label="xxx" />
       <Button onClick={update}>重新渲染父组件</Button>
       <Switch
         checked={checked}

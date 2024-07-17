@@ -372,7 +372,16 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
-    const { form, disabled } = useGetForm() || { form: props.form };
+    const { form, disabled } = useGetForm() || {
+      form: props.form || {
+        getFieldDecorator: (name, options) => (dom) =>
+          React.cloneElement(dom, {
+            ...dom.props,
+            name,
+            options,
+          }),
+      },
+    };
     const dependency = form?.dependency;
     const {
       justShow,
@@ -454,7 +463,7 @@ export const withFormItem = (Component, type) => {
     });
     useMount(() => {
       // 挂载时触发一下依赖项目变动
-      dependencyEx(form.getFieldValue(name));
+      dependencyEx(form?.getFieldValue?.(name));
     });
     useUnmount(() => {
       // 卸载时触发一下依赖项目变动
@@ -471,10 +480,10 @@ export const withFormItem = (Component, type) => {
       };
     }, [name, setFieldValueType, transform]);
 
-    if (!form || !form.getFieldDecorator) {
-      // 如果没有form对象，直接返回null
-      return null;
-    }
+    // if (!form || !form.getFieldDecorator) {
+    //   // 如果没有form对象，直接返回null
+    //   return null;
+    // }
 
     // if (renderCondition !== undefined) {
     //   // 条件判断，该项是否需要渲染到表单上
