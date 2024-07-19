@@ -1,4 +1,10 @@
-import { useMemoizedFn, useMount, useUnmount, useUpdate } from 'ahooks';
+import {
+  useMemoizedFn,
+  useMount,
+  usePrevious,
+  useUnmount,
+  useUpdate,
+} from 'ahooks';
 import { Button, Form } from 'antd';
 import classnames from 'classnames';
 import deepMerge from 'deepmerge';
@@ -519,14 +525,21 @@ export const withFormItem = (Component, type) => {
     const initVal = initialValues
       ? objectPath.get(initialValues, name)
       : initialValue;
+    const init =
+      typeof convertInitValue === 'function'
+        ? convertInitValue({ initVal, initialValues, form })
+        : initVal;
+
+    const previous = usePrevious(init);
+    if (previous !== init) {
+      const val = form?.getFieldValue?.(name);
+      dependencyEx(val ?? init);
+    }
 
     let filed = getFieldDecorator(name, {
       type,
-      initialValue: initVal,
-      initialValue:
-        typeof convertInitValue === 'function'
-          ? convertInitValue({ initVal, initialValues, form })
-          : initVal,
+      // initialValue: initVal,
+      initialValue: init,
       rules,
       // 隐藏后忽略校验
       // hidden: !!hide ?? false,

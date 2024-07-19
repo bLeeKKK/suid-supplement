@@ -8,7 +8,27 @@ import {
   FormTextArea,
   SFormBox,
   SRow,
+  useWatch,
 } from 'suid-supplement';
+
+const OutForm = () => {
+  const data = useWatch(['namexxx']);
+  console.log(data);
+
+  return (
+    <FormInput
+      label="用户"
+      name="namexxx"
+      rules={[
+        {
+          required: true,
+          message: '请输入用户名',
+        },
+      ]}
+      initialValue="李四xxx"
+    />
+  );
+};
 
 // const getDirctData = async (code, count, filters) => {
 //   const { data } = await axios.get(`/api/dict`, {
@@ -56,6 +76,7 @@ export default () => {
           }}
           ref={formRef}
         >
+          <OutForm />
           <FormBoxDependency nameList={['age3']}>
             {({ age3 }) => {
               return age3 ? (
