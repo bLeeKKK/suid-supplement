@@ -48,6 +48,7 @@ export const SSelect = forwardRef(
       noWrap = false,
       className,
       paginated,
+      style,
       ...props
     },
     ref,
@@ -210,6 +211,7 @@ export const SSelect = forwardRef(
           className,
           noWrap && classStyle['select-overflow-hide'],
         )}
+        style={style}
         ref={selectRef}
       >
         <Select
@@ -219,6 +221,7 @@ export const SSelect = forwardRef(
           showSearch
           optionFilterProp="label"
           {...props}
+          style={{ width: '100%' }}
           ref={ref}
           mode={mode}
           suffixIcon={
