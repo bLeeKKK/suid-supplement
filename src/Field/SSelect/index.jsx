@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react';
 import OverflowShowbox from '../../OverflowShowbox';
-import classStyle from './style.module.less';
+import './style.less';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -209,7 +209,7 @@ export const SSelect = forwardRef(
         className={classnames(
           'w-full h-full inline-block',
           className,
-          noWrap && classStyle['select-overflow-hide'],
+          noWrap && 'sselect-overflow-hide',
         )}
         style={style}
         ref={selectRef}
