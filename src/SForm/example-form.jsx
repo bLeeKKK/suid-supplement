@@ -157,6 +157,7 @@ export default Form.create()(({ form }) => {
             { label: 'Banana', value: 'banana' },
             { label: 'Orange', value: 'orange' },
           ]}
+          noWrap
           initialValue={['apple', 'pear', 'xxxx']}
           label="用户"
           name="typeCode3"

@@ -7,7 +7,6 @@ import {
 } from 'ahooks';
 import { Button, Form } from 'antd';
 import classnames from 'classnames';
-import deepMerge from 'deepmerge';
 import objectPath from 'object-path';
 import React, {
   createContext,
@@ -251,7 +250,9 @@ const transformKeySubmitValue = (values, dataFormatMapRaw, omit = true) => {
           return;
         }
         if (typeof tempKey === 'object' && !Array.isArray(finalValues)) {
-          finalValues = deepMerge(finalValues, tempKey);
+          // console.log(finalValues, tempKey)
+          // finalValues = deepMerge(finalValues, tempKey);
+          finalValues = { ...finalValues, ...tempKey };
         } else if (typeof tempKey === 'object' && Array.isArray(finalValues)) {
           result = { ...result, ...tempKey };
         } else if (tempKey !== null || tempKey !== undefined) {
