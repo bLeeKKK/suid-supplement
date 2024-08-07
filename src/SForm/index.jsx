@@ -379,16 +379,20 @@ export const FormBoxDependency = ({ nameList, children, form }) => {
 // 创建Form.Item包裹的表单项
 export const withFormItem = (Component, type) => {
   const App = (props) => {
-    const { form, disabled: disabledForm } = useGetForm() || {
-      form: props.form || {
-        getFieldDecorator: (name, options) => (dom) =>
-          React.cloneElement(dom, {
-            ...dom.props,
-            name,
-            options,
-          }),
-      },
-    };
+    const fatherForm = useGetForm();
+    const { form, disabled: disabledForm } = (props.form && {
+      form: props.form,
+    }) ||
+      fatherForm || {
+        form: props.form || {
+          getFieldDecorator: (name, options) => (dom) =>
+            React.cloneElement(dom, {
+              ...dom.props,
+              name,
+              options,
+            }),
+        },
+      };
     const dependency = form?.dependency;
     const {
       justShow,
@@ -698,6 +702,8 @@ const FormBox = forwardRef(
   ) => {
     /** 保存 transformKeyRef，用于对表单key transform */
     const transformKeyRef = useRef({});
+    form.transformKeyRef = form.transformKeyRef || transformKeyRef;
+
     // const dependency = useRef({});
     const [inLoading, setInLoading] = useState(false);
     const load = loading || inLoading;
@@ -706,7 +712,7 @@ const FormBox = forwardRef(
     const transformKey = useMemoizedFn((values, paramsOmitNil) => {
       return transformKeySubmitValue(
         values,
-        transformKeyRef.current,
+        form.transformKeyRef.current,
         paramsOmitNil,
       );
     });
@@ -818,7 +824,7 @@ const FormBox = forwardRef(
           itemPropsDefault,
           initialValues,
           setFieldValueType: (name, { transform }) => {
-            objectPath.set(transformKeyRef.current, name, transform);
+            objectPath.set(form.transformKeyRef.current, name, transform);
           },
           // dependency,
         }}
