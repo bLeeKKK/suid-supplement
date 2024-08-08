@@ -33,8 +33,10 @@ export default () => {
           title: '打印',
           icon: 'printer',
           onClick: console.log,
+          tip: 'xxxx xxxx xxxx xxxx z',
           disabled: true,
           onClick: (e) => {
+            console.log('printer');
             const p = new Promise((resolve) => {
               console.log(e);
               setTimeout(resolve, 2000);

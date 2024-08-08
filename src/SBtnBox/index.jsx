@@ -26,7 +26,7 @@ export const SBtn = (props) => {
 
   return (
     <>
-      {tip ? (
+      {tip || tooltip ? (
         <Tooltip title={tip} {...tooltip}>
           {btn}
         </Tooltip>
@@ -69,6 +69,8 @@ export const ActionBtn = (props) => {
 export const ActionMenu = ({ res }) => {
   const [inLoading, setInLoading] = useState(false);
   const {
+    tooltip = {},
+    tip,
     render,
     loading = false,
     onClick,
@@ -103,20 +105,27 @@ export const ActionMenu = ({ res }) => {
   );
 
   DomA = render ? render({ dom: DomA, btnOrMenu: 'menu' }) : DomA;
-
-  return (
+  const domFinaly = (
     <div
       style={{
         textAlign: 'center',
         ...(style || {}),
-        ...(load || disabled ? { pointerEvents: 'none' } : {}),
+        // ...(load || disabled ? { pointerEvents: 'none' } : {}),
         ...(load ? { opacity: 0.5 } : {}),
       }}
-      onClick={click}
+      onClick={load || disabled ? undefined : click}
       {...resProps}
     >
       {DomA}
     </div>
+  );
+
+  return tip || tooltip ? (
+    <Tooltip title={tip} placement="right" {...tooltip}>
+      {domFinaly}
+    </Tooltip>
+  ) : (
+    domFinaly
   );
 };
 
