@@ -29,6 +29,7 @@ export default () => {
         },
         {
           title: '打印',
+          tip: '打印提示',
           type: 'printer',
           onClick: console.log,
           disabled: true,

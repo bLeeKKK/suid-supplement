@@ -13,7 +13,7 @@ export const IconContext = createContext({});
 export const useIconContext = () => useContext(IconContext);
 
 export const SIcon = (props) => {
-  const { tooltip = {}, title, className, disabled, ...restProps } = props;
+  const { tooltip = {}, tip, title, className, disabled, ...restProps } = props;
 
   const icon = (
     <span>
@@ -28,8 +28,8 @@ export const SIcon = (props) => {
 
   return (
     <>
-      {title ? (
-        <Tooltip title={title} {...tooltip}>
+      {title || tip || tooltip ? (
+        <Tooltip title={tip || title} {...tooltip}>
           {icon}
         </Tooltip>
       ) : (
@@ -72,7 +72,16 @@ export const ActionIcon = ({ ...props }) => {
 
 export const ActionMenu = ({ ...res }) => {
   const [inLoading, setInLoading] = useState(false);
-  const { render, loading = false, onClick, disabled, ...resProps } = res;
+  const {
+    render,
+    loading = false,
+    onClick,
+    disabled,
+    tip,
+    tooltip,
+    type,
+    ...resProps
+  } = res;
   const click = (...args) => {
     const r = onClick(...args);
     if (r && r.then) {
@@ -87,24 +96,36 @@ export const ActionMenu = ({ ...res }) => {
 
   let DomA = (
     <>
-      {load ? <SIcon type="loading" style={{ marginRight: '8px' }} /> : null}
+      {load ? (
+        <SIcon type="loading" style={{ marginRight: '8px' }} />
+      ) : (
+        <SIcon type={type} style={{ marginRight: '8px' }} />
+      )}
       {res.title || '请定义标题'}
     </>
   );
 
   DomA = render ? render({ dom: DomA, iconOrMenu: 'menu' }) : DomA;
 
-  return (
+  const domFinaly = (
     <div
       className={classnames('s-s-icon-menu-item', {
         loading: load,
-        ['s-s-icon-menu-disabled']: disabled,
+        // ['s-s-icon-menu-disabled']: disabled,
       })}
-      onClick={click}
+      onClick={disabled ? undefined : click}
       {...resProps}
     >
       {DomA}
     </div>
+  );
+
+  return tip || tooltip ? (
+    <Tooltip title={tip} placement="right" {...tooltip}>
+      {domFinaly}
+    </Tooltip>
+  ) : (
+    domFinaly
   );
 };
 
