@@ -65,6 +65,7 @@ export default () => {
           style={{
             width: '500px',
           }}
+          layout="vertical"
           justShow={checked}
           onFinish={(values) => {
             return new Promise((resolve) => {
@@ -75,6 +76,12 @@ export default () => {
             });
           }}
           ref={formRef}
+          itemPropsDefault={{
+            formItem: {
+              labelCol: undefined,
+              wrapperCol: undefined,
+            },
+          }}
         >
           <OutForm />
           <FormBoxDependency nameList={['age3']}>

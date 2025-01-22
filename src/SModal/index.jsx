@@ -187,15 +187,26 @@ export const withModalControls = (Component) => {
  * @description 可以直接使用组件放到页面中
  */
 export const useComponentModal = (Component, props = {}) => {
+  const [temporaryProps, setTemporaryProps] = useState({});
   const [visible, setVisible] = useControlVisible(props);
   const modalCounter = (
-    <Component visible={visible} setVisible={setVisible} {...props} />
+    <Component
+      visible={visible}
+      setVisible={setVisible}
+      {...props}
+      {...(temporaryProps || {})}
+    />
   );
-
   return {
     modalCounter,
-    show: () => setVisible(true),
-    close: () => setVisible(false),
+    show: (p) => {
+      setTemporaryProps(p);
+      setVisible(true);
+    },
+    close: () => {
+      setTemporaryProps({});
+      setVisible(false);
+    },
     visible,
     setVisible,
   };

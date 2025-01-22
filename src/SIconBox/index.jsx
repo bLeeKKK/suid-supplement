@@ -67,7 +67,9 @@ export const ActionIcon = ({ ...props }) => {
   );
   const IconDomA = IconDom;
 
-  return render ? render({ dom: IconDomA, iconOrMenu: 'icon' }) : IconDomA;
+  return render
+    ? render({ dom: IconDomA, iconOrMenu: 'icon', setInLoading })
+    : IconDomA;
 };
 
 export const ActionMenu = ({ ...res }) => {
@@ -105,7 +107,9 @@ export const ActionMenu = ({ ...res }) => {
     </>
   );
 
-  DomA = render ? render({ dom: DomA, iconOrMenu: 'menu' }) : DomA;
+  DomA = render
+    ? render({ dom: DomA, iconOrMenu: 'menu', setInLoading })
+    : DomA;
 
   const domFinaly = (
     <div

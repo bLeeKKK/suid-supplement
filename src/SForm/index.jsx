@@ -440,6 +440,7 @@ export const withFormItem = (Component, type) => {
       required,
       validateStatus,
       errInline = false,
+      formItem = {},
 
       ...residue
     } = { ...(itemPropsDefault || {}), ...props };
@@ -610,6 +611,7 @@ export const withFormItem = (Component, type) => {
         labelAlign={labelAlign}
         required={required}
         validateStatus={validateStatus}
+        {...formItem}
       >
         {filed}
       </Form.Item>
