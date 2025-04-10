@@ -1,6 +1,6 @@
 # suid-supplement
 
-因公司技术栈，这是一个基于 antd3 开发的 ui 库
+这是一个基于 antd3 开发的 ui 库
 
 [![NPM version](https://img.shields.io/npm/v/suid-supplement.svg?style=flat)](https://npmjs.org/package/suid-supplement)
 [![NPM downloads](http://img.shields.io/npm/dm/suid-supplement.svg?style=flat)](https://npmjs.org/package/suid-supplement)
